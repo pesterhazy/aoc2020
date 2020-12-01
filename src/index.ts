@@ -1,6 +1,3 @@
-// todo: SPC j j
-// todo: github repo
-
 function solvea(xs: number[]) {
   for (var i = 0; i < xs.length; i++) {
     for (var j = 0; j < xs.length; j++) {
