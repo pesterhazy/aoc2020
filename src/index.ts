@@ -1,3 +1,5 @@
+import { slurp } from "./util.ts";
+
 function solvea(xs: number[]) {
   for (var i = 0; i < xs.length; i++) {
     for (var j = 0; j < xs.length; j++) {
@@ -25,7 +27,7 @@ function solveb(xs: number[]) {
 }
 
 async function run() {
-  var text: string = (await Deno.readTextFile("data/day01a.txt")).trimEnd();
+  var text: string = await slurp("data/day01a.txt");
   var xs = text.split(/\n/).map(n => parseInt(n));
 
   console.log(xs);
