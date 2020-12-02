@@ -20,11 +20,7 @@ function parse(l: string): Inf {
   };
 }
 
-export async function run() {
-  var text: string = await slurp("data/day02a.txt");
-
-  var infs = text.split(/\n/).map(parse);
-
+function solvea(infs: Inf[]) {
   var valid = 0;
   for (var inf of infs) {
     let count = 0;
@@ -34,4 +30,24 @@ export async function run() {
     if (!(count < inf.low || count > inf.high)) valid++;
   }
   console.log(valid);
+}
+
+function solveb(infs: Inf[]) {
+  var valid = 0;
+  for (var inf of infs) {
+    let count =
+      (inf.password[inf.low - 1] === inf.c ? 1 : 0) +
+      (inf.password[inf.high - 1] === inf.c ? 1 : 0);
+
+    if (count === 1) valid++;
+  }
+  console.log(valid);
+}
+
+export async function run() {
+  var text: string = await slurp("data/day02a.txt");
+
+  var infs = text.split(/\n/).map(parse);
+
+  solveb(infs);
 }
