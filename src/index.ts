@@ -1,3 +1,3 @@
-import { run } from "./day01.ts";
+import { run } from "./day02.ts";
 
 await run();
