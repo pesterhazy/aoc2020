@@ -16,31 +16,31 @@ function parse(l: string): Inf {
   return { m: m };
 }
 
-function validate(field: string, v: string): boolean {
+function validate(field: string, s: string): boolean {
   switch (field) {
     case "byr": {
-      let n = parseInt(v);
+      let n = parseInt(s);
 
       if (isNaN(n)) return false;
 
       return n >= 1920 && n <= 2020;
     }
     case "iyr": {
-      let n = parseInt(v);
+      let n = parseInt(s);
 
       if (isNaN(n)) return false;
 
       return n >= 2010 && n <= 2020;
     }
     case "eyr": {
-      let n = parseInt(v);
+      let n = parseInt(s);
 
       if (isNaN(n)) return false;
 
       return n >= 2020 && n <= 2030;
     }
     case "hgt": {
-      let matches = v.match(/^(\d+)(cm|in)$/);
+      let matches = s.match(/^(\d+)(cm|in)$/);
       if (!matches) return false;
 
       let n = parseInt(matches[1]);
@@ -50,17 +50,17 @@ function validate(field: string, v: string): boolean {
       else return n >= 59 && n <= 76;
     }
     case "hcl": {
-      let matches = v.match(/^#[0-9a-f]{6}$/);
+      let matches = s.match(/^#[0-9a-f]{6}$/);
       return !!matches;
     }
 
     case "ecl": {
-      let matches = v.match(/^(amb|blu|brn|gry|grn|hzl|oth)$/);
+      let matches = s.match(/^(amb|blu|brn|gry|grn|hzl|oth)$/);
       return !!matches;
     }
 
     case "pid": {
-      let matches = v.match(/^[0-9]{9}$/);
+      let matches = s.match(/^[0-9]{9}$/);
       return !!matches;
     }
     default:
