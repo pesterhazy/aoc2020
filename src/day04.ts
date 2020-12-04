@@ -18,12 +18,51 @@ function parse(l: string): Inf {
 
 function validate(field: string, v: string): boolean {
   switch (field) {
-    case "byr":
+    case "byr": {
       let n = parseInt(v);
 
       if (isNaN(n)) return false;
 
       return n >= 1920 && n <= 2020;
+    }
+    case "iyr": {
+      let n = parseInt(v);
+
+      if (isNaN(n)) return false;
+
+      return n >= 2010 && n <= 2020;
+    }
+    case "eyr": {
+      let n = parseInt(v);
+
+      if (isNaN(n)) return false;
+
+      return n >= 2020 && n <= 2030;
+    }
+    case "hgt": {
+      let matches = v.match(/^(\d+)(cm|in)$/);
+      if (!matches) return false;
+
+      let n = parseInt(matches[1]);
+      let unit = matches[2];
+
+      if (unit === "cm") return n >= 150 && n <= 193;
+      else return n >= 59 && n <= 76;
+    }
+    case "hcl": {
+      let matches = v.match(/^#[0-9a-f]{6}$/);
+      return !!matches;
+    }
+
+    case "ecl": {
+      let matches = v.match(/^(amb|blu|brn|gry|grn|hzl|oth)$/);
+      return !!matches;
+    }
+
+    case "pid": {
+      let matches = v.match(/^[0-9]{9}$/);
+      return !!matches;
+    }
     default:
       return true;
   }
@@ -62,8 +101,10 @@ function solveb(infs: Inf[]) {
   console.log(count);
 }
 
+// 115 is to high
+
 export async function run() {
-  var text: string = await slurp("data/day04x.txt");
+  var text: string = await slurp("data/day04a.txt");
 
   var infs = text.split(/\n\n/).map(parse);
 
