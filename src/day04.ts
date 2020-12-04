@@ -23,7 +23,7 @@ function validate(field: string, s: string): boolean {
 
       if (isNaN(n)) return false;
 
-      return n >= 1920 && n <= 2020;
+      return n >= 1920 && n <= 2002;
     }
     case "iyr": {
       let n = parseInt(s);
@@ -63,9 +63,8 @@ function validate(field: string, s: string): boolean {
       let matches = s.match(/^[0-9]{9}$/);
       return !!matches;
     }
-    default:
-      return true;
   }
+  throw "should not get here";
 }
 
 function solvea(infs: Inf[]) {
