@@ -33,7 +33,8 @@ function solveb(infs: Inf[]) {
   let last = -1;
 
   for (let x of xs) {
-    if (x !== last + 1) console.log(x);
+    // yeah this will print out 2 numbers I know
+    if (x !== last + 1) console.log(last);
     last = x;
   }
 }
