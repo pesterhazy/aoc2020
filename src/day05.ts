@@ -34,7 +34,7 @@ function solveb(infs: Inf[]) {
 
   for (let x of xs) {
     // yeah this will print out 2 numbers I know
-    if (x !== last + 1) console.log(last);
+    if (x !== last + 1) console.log(last + 1);
     last = x;
   }
 }
