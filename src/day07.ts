@@ -5,6 +5,8 @@ interface Inf {
   vertices: Map<string, number>;
 }
 
+type World = Map<string, Inf>;
+
 function parse(s: string): Inf {
   let xs = s.split(/ /);
   let inf: Inf;
@@ -31,18 +33,57 @@ function parse(s: string): Inf {
   return inf;
 }
 
-function solvea(infs: Inf[]) {
-  let ans = null;
+function finda(world: World, label: string): Map<string, number> {
+  let result = new Map();
+
+  let inf = world.get(label);
+  if (!inf) throw ":(";
+  for (let [k, v] of inf.vertices.entries()) {
+    result.set(k, (result.get(k) || 0) + 1);
+    for (let [a, b] of finda(world, k)) {
+      result.set(a, (result.get(a) || 0) + b);
+    }
+  }
+  return result;
+}
+
+function solvea(world: World) {
+  let ans = 0;
+
+  for (let inf of world.values()) {
+    let m = finda(world, inf.label);
+
+    if (m.has("shiny gold")) ans++;
+  }
+
   console.log(ans);
 }
 
-// 4431
+function findb(world: World, label: string): number {
+  let inf = world.get(label);
+  if (!inf) throw ":(";
+  let n = 1;
+  for (let [k, v] of inf.vertices.entries()) {
+    n += v * findb(world, k);
+  }
+  return n;
+}
+
+function solveb(world: World) {
+  let ans = findb(world, "shiny gold") - 1;
+
+  console.log(ans);
+}
 
 export async function run() {
-  var text: string = await slurp("data/day07.txt");
+  var text: string = await slurp("data/day07a.txt");
   var infs = text.split(/\n/).map(parse);
 
-  console.log(infs);
+  let world = new Map();
+  for (let inf of infs) {
+    world.set(inf.label, inf);
+  }
 
-  solvea(infs);
+  solvea(world);
+  solveb(world);
 }
