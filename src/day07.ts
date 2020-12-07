@@ -1,4 +1,4 @@
-import { slurp } from "./util.ts";
+import { slurp } from "./util";
 
 interface Inf {
   label: string;

@@ -1,4 +1,4 @@
-import { slurp } from "./util.ts";
+import { slurp } from "./util";
 
 let required = "byr,iyr,eyr,hgt,hcl,ecl,pid".split(/,/);
 let optional = ["cid"];

@@ -1,4 +1,4 @@
-import { slurp } from "./util.ts";
+import { slurp } from "./util";
 
 function solvea(xs: number[]) {
   for (var i = 0; i < xs.length; i++) {
