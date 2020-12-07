@@ -2,7 +2,7 @@ import { slurp } from "./util.ts";
 
 interface Inf {
   label: string;
-  vertices: Map<string, number>;
+  edges: Map<string, number>;
 }
 
 type World = Map<string, Inf>;
@@ -13,21 +13,21 @@ function parse(s: string): Inf {
   if (xs.length === 7) {
     inf = {
       label: xs[0] + " " + xs[1],
-      vertices: new Map()
+      edges: new Map()
     };
   } else {
     let ss = xs.slice(4);
-    let vertices = new Map();
+    let edges = new Map();
 
     if (ss.length % 4 !== 0) throw ":(";
 
     for (let i = 0; i < ss.length; i += 4) {
-      vertices.set(ss[i + 1] + " " + ss[i + 2], parseInt(ss[i]));
+      edges.set(ss[i + 1] + " " + ss[i + 2], parseInt(ss[i]));
     }
 
     inf = {
       label: xs[0] + " " + xs[1],
-      vertices: vertices
+      edges: edges
     };
   }
   return inf;
@@ -38,7 +38,7 @@ function finda(world: World, label: string): Map<string, number> {
 
   let inf = world.get(label);
   if (!inf) throw ":(";
-  for (let [k, v] of inf.vertices.entries()) {
+  for (let [k, v] of inf.edges.entries()) {
     result.set(k, (result.get(k) || 0) + 1);
     for (let [a, b] of finda(world, k)) {
       result.set(a, (result.get(a) || 0) + b);
@@ -63,7 +63,7 @@ function findb(world: World, label: string): number {
   let inf = world.get(label);
   if (!inf) throw ":(";
   let n = 1;
-  for (let [k, v] of inf.vertices.entries()) {
+  for (let [k, v] of inf.edges.entries()) {
     n += v * findb(world, k);
   }
   return n;
