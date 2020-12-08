@@ -45,6 +45,7 @@ function solvea(infs: Inf[]) {
       }
       switch (op) {
         case "nop":
+          // collect patch locations on first run
           if (count === 0) patches.add(ip);
           ip++;
           break;
@@ -53,6 +54,7 @@ function solvea(infs: Inf[]) {
           ip++;
           break;
         case "jmp":
+          // collect patch locations on first run
           if (count === 0) patches.add(ip);
           ip = ip + cur.arg;
           break;
