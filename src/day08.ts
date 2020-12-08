@@ -14,8 +14,6 @@ function parse(s: string): Inf {
 }
 
 function solvea(infs: Inf[]) {
-  let ans = 0;
-
   let patches: Set<number> = new Set();
   let count = 0;
 
@@ -63,9 +61,7 @@ function solvea(infs: Inf[]) {
       }
     }
     count++;
-    if (count > 100) throw ":(";
   }
-  console.log(patches);
 }
 
 export async function run() {
