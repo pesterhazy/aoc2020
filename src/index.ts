@@ -1,3 +1,3 @@
-import { run } from "./day08";
+import { run } from "./day09";
 
 run();
