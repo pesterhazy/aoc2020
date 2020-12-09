@@ -45,7 +45,14 @@ function solveb(infs: Inf[], target: number) {
     let n = win.reduce((a: number, b: number) => a + b);
 
     if (n === target) {
-      console.log("found", win[0] + win[win.length - 1]);
+      let min = -Infinity;
+      let max = Infinity;
+      for (let w of win) {
+        if (w > min) min = w;
+        if (w < max) max = w;
+      }
+
+      console.log("found", win, min + max);
       return;
     } else if (n > target) win.shift();
     else if (0 === rest.length) throw "not found";
