@@ -25,11 +25,6 @@ function solvea(infs: Inf[]) {
   console.log(steps.get(1)! * steps.get(3)!);
 }
 
-interface Job {
-  todo: number[];
-  prevs: number[];
-}
-
 function solveb(infs: Inf[]) {
   let ns = [...infs];
 
@@ -38,31 +33,30 @@ function solveb(infs: Inf[]) {
   });
   ns.push(ns[ns.length - 1] + 3);
 
-  let q: Job[] = [{ todo: [...ns], prevs: [0] }];
+  let answers: Map<number, number> = new Map();
 
-  let wins: number = 0;
-  while (q.length > 0) {
-    let job = q.pop()!;
-    console.log(job);
+  function find(ns: number[], prev: number) {
+    if (ns.length === 0) return 1;
+    let cached = answers.get(ns[0]);
+    if (cached !== undefined) return cached;
 
-    if (job.todo.length === 0) {
-      wins++;
-      continue;
+    let r = 0;
+    for (let i = 0; i < Math.min(3, ns.length); i++) {
+      let v = ns[i];
+      if (v - prev > 3) continue;
+
+      r += find(ns.slice(i + 1), v);
     }
 
-    let left = Math.min(3, job.todo.length);
-
-    for (let i = 0; i < left; i++) {
-      let v = job.todo[i];
-      if (v - job.prevs[job.prevs.length - 1] > 3) continue;
-      q.push({ todo: job.todo.slice(i + 1), prevs: [...job.prevs, v] });
-    }
+    answers.set(ns[0], r);
+    return r;
   }
-  console.log("wins", wins);
+
+  console.log("answer", find(ns, 0));
 }
 
 export async function run() {
-  var text: string = await slurp("data/day10.txt");
+  var text: string = await slurp("data/day10a.txt");
   var infs = text.split(/\n/).map(parse);
 
   // solvea(infs);
