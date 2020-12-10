@@ -18,7 +18,6 @@ function solvea(infs: Inf[]) {
   let prev = 0;
   for (let n of ns) {
     let step = n - prev;
-    console.log(step);
     steps.set(step, (steps.get(step) || 0) + 1);
     prev = n;
   }
@@ -52,13 +51,13 @@ function solveb(infs: Inf[]) {
     return r;
   }
 
-  console.log("answer", find(ns, 0));
+  console.log(find(ns, 0));
 }
 
 export async function run() {
   var text: string = await slurp("data/day10a.txt");
   var infs = text.split(/\n/).map(parse);
 
-  // solvea(infs);
+  solvea(infs);
   solveb(infs);
 }
