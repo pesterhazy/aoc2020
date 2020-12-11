@@ -24,6 +24,23 @@ function peek(grid: string[], p: Point) {
   return grid[p.y][p.x % width(grid)];
 }
 
+function peekDir(grid: string[], pp: Point, delta: Point) {
+  let p = { x: pp.x, y: pp.y };
+  while (true) {
+    p.x += delta.x;
+    p.y += delta.y;
+
+    if (p.x < 0) return undefined;
+    if (p.y < 0) return undefined;
+    if (p.x >= width(grid)) return undefined;
+    if (p.y >= height(grid)) return undefined;
+
+    let c = grid[p.y][p.x % width(grid)];
+
+    if (c === "#" || c === "L") return c;
+  }
+}
+
 let deltas: Point[] = [
   { x: -1, y: -1 },
   { x: -1, y: 0 },
@@ -43,7 +60,7 @@ function ng(grid: Grid): [Grid, boolean] {
     let n = 0;
 
     for (let delta of deltas) {
-      let cc = peek(grid, { x: delta.x + x, y: delta.y + y });
+      let cc = peekDir(grid, { x, y }, delta);
 
       if (cc === undefined) continue;
 
@@ -54,7 +71,7 @@ function ng(grid: Grid): [Grid, boolean] {
       return "#";
     }
 
-    if (c === "#" && n >= 4) {
+    if (c === "#" && n >= 5) {
       stable = false;
       return "L";
     }
