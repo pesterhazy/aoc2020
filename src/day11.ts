@@ -54,7 +54,37 @@ let deltas: Point[] = [
   { x: 1, y: 1 }
 ];
 
-function ng(grid: Grid): [Grid, boolean] {
+function nga(grid: Grid): [Grid, boolean] {
+  let stable = true;
+  function xform(c: string, x: number, y: number) {
+    let n = 0;
+
+    for (let delta of deltas) {
+      let cc = peek(grid, { x: x + delta.x, y: y + delta.y });
+
+      if (cc === undefined) continue;
+
+      if (cc === "#") n++;
+    }
+    if (c === "L" && n === 0) {
+      stable = false;
+      return "#";
+    }
+
+    if (c === "#" && n >= 4) {
+      stable = false;
+      return "L";
+    }
+
+    return c;
+  }
+  grid = grid.map((line: string, y: number) =>
+    [...line].map((c, x) => xform(c, x, y)).join("")
+  );
+  return [grid, stable];
+}
+
+function ngb(grid: Grid): [Grid, boolean] {
   let stable = true;
   function xform(c: string, x: number, y: number) {
     let n = 0;
@@ -84,11 +114,10 @@ function ng(grid: Grid): [Grid, boolean] {
   return [grid, stable];
 }
 
-function solvea(grid: string[]) {
+function solve(grid: string[], ng: (grid: Grid) => [Grid, boolean]) {
   let stable: boolean = false;
   while (true) {
     [grid, stable] = ng(grid);
-    console.log(stable);
     if (stable) break;
   }
 
@@ -99,12 +128,11 @@ function solvea(grid: string[]) {
   console.log(n);
 }
 
-function solveb(grid: string[]) {}
-
 export async function run() {
   var text: string = await slurp("data/day11a.txt");
 
   var grid = text.split(/\n/);
 
-  solvea(grid);
+  solve(grid, nga);
+  solve(grid, ngb);
 }
