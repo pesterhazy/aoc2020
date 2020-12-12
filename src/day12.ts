@@ -10,21 +10,8 @@ interface Inf {
   v: number;
 }
 
-interface Point {
-  x: number;
-  y: number;
-}
-
-function add(a: Point, b: Point): Point {
-  return { x: a.x + b.x, y: a.y + b.y };
-}
-
-function mul(a: Point, v: number): Point {
-  return { x: a.x * v, y: a.y * v };
-}
-
-function manh(a: Point) {
-  return Math.abs(a.x) + Math.abs(a.y);
+function manh(a: vec2) {
+  return Math.abs(a[0]) + Math.abs(a[1]);
 }
 
 const ROT = [
@@ -41,11 +28,11 @@ function parse(s: string): Inf {
   };
 }
 
-const delta: Record<string, Point> = {
-  E: { x: 1, y: 0 },
-  W: { x: -1, y: 0 },
-  N: { y: -1, x: 0 },
-  S: { y: 1, x: 0 }
+const delta: Record<string, vec2> = {
+  E: [1, 0],
+  W: [-1, 0],
+  N: [0, -1],
+  S: [0, 1]
 };
 
 const dirs = ["E", "N", "W", "S"];
@@ -60,28 +47,33 @@ function turn(dir: string, lr: string, v: number): string {
   return dirs[idx];
 }
 
-function turnb(waypoint: Point, lr: string, v: number): Point {
+function turnb(waypoint: vec2, lr: string, v: number): vec2 {
   let idx = mod((v / 90) * (lr === "L" ? 1 : -1), ROT.length);
-  let out = vec2.create();
-  vec2.transformMat2(out, vec2.fromValues(waypoint.x, waypoint.y), ROT[idx]);
-
-  return { x: out[0], y: out[1] };
+  return vec2.transformMat2(vec2.create(), waypoint, ROT[idx]);
 }
 
 function solvea(infs: Inf[]) {
   let dir = "E";
-  let pos: Point = { x: 0, y: 0 };
+  let pos: vec2 = [0, 0];
 
   for (let inf of infs) {
     switch (inf.action) {
       case "F":
-        pos = add(pos, mul(delta[dir] as Point, inf.v));
+        pos = vec2.add(
+          vec2.create(),
+          pos,
+          vec2.scale(vec2.create(), delta[dir], inf.v)
+        );
         break;
       case "N":
       case "S":
       case "E":
       case "W":
-        pos = add(pos, mul(delta[inf.action], inf.v));
+        pos = vec2.add(
+          vec2.create(),
+          pos,
+          vec2.scale(vec2.create(), delta[inf.action], inf.v)
+        );
         break;
       case "L":
       case "R":
@@ -96,19 +88,27 @@ function solvea(infs: Inf[]) {
 }
 
 function solveb(infs: Inf[]) {
-  let pos: Point = { x: 0, y: 0 };
-  let waypoint: Point = { x: 10, y: -1 };
+  let pos: vec2 = [0, 0];
+  let waypoint: vec2 = [10, -1];
 
   for (let inf of infs) {
     switch (inf.action) {
       case "F":
-        pos = add(pos, mul(waypoint, inf.v));
+        pos = vec2.add(
+          vec2.create(),
+          pos,
+          vec2.scale(vec2.create(), waypoint, inf.v)
+        );
         break;
       case "N":
       case "S":
       case "E":
       case "W":
-        waypoint = add(waypoint, mul(delta[inf.action], inf.v));
+        waypoint = vec2.add(
+          vec2.create(),
+          waypoint,
+          vec2.scale(vec2.create(), delta[inf.action], inf.v)
+        );
         break;
       case "L":
       case "R":
