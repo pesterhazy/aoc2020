@@ -26,6 +26,38 @@ function manh(a: Point) {
   return Math.abs(a.x) + Math.abs(a.y);
 }
 
+function mulm(m1: number[][], m2: number[][]) {
+  var result: number[][] = [];
+
+  for (var i = 0; i < m1.length; i++) {
+    result[i] = [];
+    for (var j = 0; j < m2[0].length; j++) {
+      var sum = 0;
+      for (var k = 0; k < m1[0].length; k++) {
+        sum += m1[i][k] * m2[k][j];
+      }
+      result[i][j] = sum;
+    }
+  }
+  return result;
+}
+
+const ROT = [
+  [
+    [0, -1],
+    [1, 0]
+  ],
+
+  [
+    [-1, 0],
+    [0, -1]
+  ],
+  [
+    [0, 1],
+    [-1, 0]
+  ]
+];
+
 function parse(s: string): Inf {
   return {
     action: s[0],
@@ -50,6 +82,15 @@ function turn(dir: string, lr: string, v: number): string {
   if (idx > dirs.length || idx < 0) throw "boom: " + idx;
 
   return dirs[idx];
+}
+
+function turnb(waypoint: Point, lr: string, v: number): Point {
+  let p = [waypoint.x, waypoint.y];
+
+  let idx = mod((v / 90) * (lr === "L" ? 1 : -1), ROT.length);
+  p = mulm([p], ROT[idx])[0];
+
+  return { x: p[0], y: p[1] };
 }
 
 function solvea(infs: Inf[]) {
@@ -80,9 +121,40 @@ function solvea(infs: Inf[]) {
   console.log(manh(pos));
 }
 
+function solveb(infs: Inf[]) {
+  console.log(infs);
+  let pos: Point = { x: 0, y: 0 };
+  let waypoint: Point = { x: 10, y: -1 };
+
+  console.log(pos, waypoint);
+  for (let inf of infs) {
+    console.log(inf);
+    switch (inf.action) {
+      case "F":
+        pos = add(pos, mul(waypoint, inf.v));
+        break;
+      case "N":
+      case "S":
+      case "E":
+      case "W":
+        waypoint = add(waypoint, mul(delta[inf.action], inf.v));
+        break;
+      case "L":
+      case "R":
+        waypoint = turnb(waypoint, inf.action, inf.v);
+        break;
+
+      default:
+        throw ":(";
+    }
+    console.log(pos, waypoint);
+  }
+  console.log(manh(pos));
+}
+
 export async function run() {
-  var text: string = await slurp("data/day12a.txt");
+  var text: string = await slurp("data/day12.txt");
   var infs = text.split(/\n/).map(parse);
 
-  solvea(infs);
+  solveb(infs);
 }
