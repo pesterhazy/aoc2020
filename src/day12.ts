@@ -14,11 +14,11 @@ function manh(a: vec2) {
   return Math.abs(a[0]) + Math.abs(a[1]);
 }
 
-const ROT = [
-  mat2.fromValues(1, 0, 0, 1),
-  mat2.fromValues(0, -1, 1, 0),
-  mat2.fromValues(-1, 0, 0, -1),
-  mat2.fromValues(0, 1, -1, 0)
+const ROT: [number, number, number, number][] = [
+  [1, 0, 0, 1],
+  [0, -1, 1, 0],
+  [-1, 0, 0, -1],
+  [0, 1, -1, 0]
 ];
 
 function parse(s: string): Inf {
@@ -49,7 +49,11 @@ function turn(dir: string, lr: string, v: number): string {
 
 function turnb(waypoint: vec2, lr: string, v: number): vec2 {
   let idx = mod((v / 90) * (lr === "L" ? 1 : -1), ROT.length);
-  return vec2.transformMat2(vec2.create(), waypoint, ROT[idx]);
+  return vec2.transformMat2(
+    vec2.create(),
+    waypoint,
+    mat2.fromValues(...ROT[idx])
+  );
 }
 
 function solvea(infs: Inf[]) {
