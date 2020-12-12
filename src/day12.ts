@@ -14,6 +14,17 @@ interface Point {
   y: number;
 }
 
+type Vector2 = [number, number];
+type Matrix2 = [Vector2, Vector2];
+
+function fromPoint(point: Point): Vector2 {
+  return [point.x, point.y];
+}
+
+function toPoint(vec: Vector2): Point {
+  return { x: vec[0], y: vec[1] };
+}
+
 function add(a: Point, b: Point): Point {
   return { x: a.x + b.x, y: a.y + b.y };
 }
@@ -42,7 +53,7 @@ function mulm(m1: number[][], m2: number[][]) {
   return result;
 }
 
-const ROT = [
+const ROT: Matrix2[] = [
   [
     [1, 0],
     [0, 1]
@@ -89,12 +100,12 @@ function turn(dir: string, lr: string, v: number): string {
 }
 
 function turnb(waypoint: Point, lr: string, v: number): Point {
-  let p = [waypoint.x, waypoint.y];
+  let p = mulm(
+    [fromPoint(waypoint)],
+    ROT[mod((v / 90) * (lr === "L" ? 1 : -1), ROT.length)]
+  )[0] as Vector2;
 
-  let idx = mod((v / 90) * (lr === "L" ? 1 : -1), ROT.length);
-  p = mulm([p], ROT[idx])[0];
-
-  return { x: p[0], y: p[1] };
+  return toPoint(p);
 }
 
 function solvea(infs: Inf[]) {
