@@ -98,7 +98,6 @@ function turnb(waypoint: Point, lr: string, v: number): Point {
 }
 
 function solvea(infs: Inf[]) {
-  console.log(infs);
   let dir = "E";
   let pos: Point = { x: 0, y: 0 };
 
@@ -126,13 +125,10 @@ function solvea(infs: Inf[]) {
 }
 
 function solveb(infs: Inf[]) {
-  console.log(infs);
   let pos: Point = { x: 0, y: 0 };
   let waypoint: Point = { x: 10, y: -1 };
 
-  console.log(pos, waypoint);
   for (let inf of infs) {
-    console.log(inf);
     switch (inf.action) {
       case "F":
         pos = add(pos, mul(waypoint, inf.v));
@@ -151,7 +147,6 @@ function solveb(infs: Inf[]) {
       default:
         throw ":(";
     }
-    console.log(pos, waypoint);
   }
   console.log(manh(pos));
 }
@@ -160,5 +155,6 @@ export async function run() {
   var text: string = await slurp("data/day12a.txt");
   var infs = text.split(/\n/).map(parse);
 
+  solvea(infs);
   solveb(infs);
 }
