@@ -44,6 +44,10 @@ function mulm(m1: number[][], m2: number[][]) {
 
 const ROT = [
   [
+    [1, 0],
+    [0, 1]
+  ],
+  [
     [0, -1],
     [1, 0]
   ],
@@ -153,7 +157,7 @@ function solveb(infs: Inf[]) {
 }
 
 export async function run() {
-  var text: string = await slurp("data/day12.txt");
+  var text: string = await slurp("data/day12a.txt");
   var infs = text.split(/\n/).map(parse);
 
   solveb(infs);
