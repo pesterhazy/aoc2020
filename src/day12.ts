@@ -1,4 +1,5 @@
 import { slurp } from "./util";
+import { vec2, mat2 } from "gl-matrix";
 
 function mod(n: number, m: number) {
   return ((n % m) + m) % m;
@@ -12,17 +13,6 @@ interface Inf {
 interface Point {
   x: number;
   y: number;
-}
-
-type Vector2 = [number, number];
-type Matrix2 = [Vector2, Vector2];
-
-function fromPoint(point: Point): Vector2 {
-  return [point.x, point.y];
-}
-
-function toPoint(vec: Vector2): Point {
-  return { x: vec[0], y: vec[1] };
 }
 
 function add(a: Point, b: Point): Point {
@@ -55,24 +45,11 @@ function mulm(m1: number[][], m2: number[][]) {
 
 // 0, 90, 180, 270 deg
 
-const ROT: Matrix2[] = [
-  [
-    [1, 0],
-    [0, 1]
-  ],
-  [
-    [0, -1],
-    [1, 0]
-  ],
-
-  [
-    [-1, 0],
-    [0, -1]
-  ],
-  [
-    [0, 1],
-    [-1, 0]
-  ]
+const ROT = [
+  mat2.fromValues(1, 0, 0, 1),
+  mat2.fromValues(0, -1, 1, 0),
+  mat2.fromValues(-1, 0, 0, -1),
+  mat2.fromValues(0, 1, -1, 0)
 ];
 
 function parse(s: string): Inf {
@@ -102,12 +79,11 @@ function turn(dir: string, lr: string, v: number): string {
 }
 
 function turnb(waypoint: Point, lr: string, v: number): Point {
-  let p = mulm(
-    [fromPoint(waypoint)],
-    ROT[mod((v / 90) * (lr === "L" ? 1 : -1), ROT.length)]
-  )[0] as Vector2;
+  let idx = mod((v / 90) * (lr === "L" ? 1 : -1), ROT.length);
+  let out = vec2.create();
+  vec2.transformMat2(out, vec2.fromValues(waypoint.x, waypoint.y), ROT[idx]);
 
-  return toPoint(p);
+  return { x: out[0], y: out[1] };
 }
 
 function solvea(infs: Inf[]) {
