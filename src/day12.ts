@@ -53,6 +53,8 @@ function mulm(m1: number[][], m2: number[][]) {
   return result;
 }
 
+// 0, 90, 180, 270 deg
+
 const ROT: Matrix2[] = [
   [
     [1, 0],
