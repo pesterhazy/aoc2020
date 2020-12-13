@@ -63,7 +63,7 @@ function solveb(world: World) {
 }
 
 export async function run() {
-  var text: string = await slurp("data/day13.txt");
+  var text: string = await slurp("data/day13a.txt");
   var world = parse(text);
 
   solveb(world);
