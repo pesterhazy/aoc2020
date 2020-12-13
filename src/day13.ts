@@ -36,28 +36,26 @@ function solvea(world: World) {
   }
 }
 
-function div(n: number, factor: number, offset: number): boolean {
-  return 0 === (n + offset) % factor;
+function div(n: bigint, factor: bigint, offset: bigint): boolean {
+  return 0n === (n + offset) % factor;
 }
 
 function solveb(world: World) {
-  let tt: [number, number][] = [];
+  let tt: [bigint, bigint][] = [];
   let idx = 0;
   for (let id of world.ids) {
-    if (!isNaN(id)) tt.push([id, idx]);
+    if (!isNaN(id)) tt.push([BigInt(id), BigInt(idx)]);
     idx++;
   }
   console.log(tt);
 
-  let start = 0;
-  let step = 1;
+  let start = 0n;
+  let step = 1n;
   while (tt.length > 0) {
     let [id, idx] = tt.shift()!;
 
     let n;
-    for (n = start; ; n += step) {
-      if (div(n, id, idx)) break;
-    }
+    for (n = start; !div(n, id, idx); n += step);
     console.log(n);
     start = n;
     step *= id;
