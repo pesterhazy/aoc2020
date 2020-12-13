@@ -27,8 +27,6 @@ function solvea(world: World) {
       min = wait;
       r = id;
     }
-
-    console.log(id, wait);
   }
 
   if (r !== undefined) {
@@ -47,7 +45,6 @@ function solveb(world: World) {
     if (!isNaN(id)) tt.push([BigInt(id), BigInt(idx)]);
     idx++;
   }
-  console.log(tt);
 
   let start = 0n;
   let step = 1n;
@@ -56,15 +53,16 @@ function solveb(world: World) {
 
     let n;
     for (n = start; !div(n, id, idx); n += step);
-    console.log(n);
     start = n;
     step *= id;
   }
+  console.log(start);
 }
 
 export async function run() {
   var text: string = await slurp("data/day13a.txt");
   var world = parse(text);
 
+  solvea(world);
   solveb(world);
 }
