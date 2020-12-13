@@ -49,29 +49,18 @@ function solveb(world: World) {
   }
   console.log(tt);
 
-  let count = 0;
-  let last = undefined;
+  let start = 0;
+  let step = 1;
+  while (tt.length > 0) {
+    let [id, idx] = tt.shift()!;
 
-  // FIXME bignums
-
-  let start = 0; //7 * 13 * 59 * 31 * 19;
-  console.log("start", start);
-  for (let n = start; n < start + 10000000; n += 7) {
-    if (
-      div(n, 7, 0) &&
-      div(n, 13, 1) &&
-      // div(n, 59, 4) &&
-      // div(n, 31, 6) &&
-      // div(n, 19, 7) &&
-      true
-    ) {
-      console.log("n", n);
-      if (last !== undefined) {
-        console.log("gap", n - last);
-      }
-      last = n;
-      if (count++ > 5) return;
+    let n;
+    for (n = start; ; n += step) {
+      if (div(n, id, idx)) break;
     }
+    console.log(n);
+    start = n;
+    step *= id;
   }
 }
 
