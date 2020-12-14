@@ -84,7 +84,8 @@ function solveb(infs: Inf[]) {
     if (inf.type === "mask") {
       masks = inf.masks;
     } else if (inf.type === "set") {
-      let pairs = [[0n, (1n << 37n) - 1n]]; // or, and
+      // start with identity masks
+      let pairs = [[0n, ~0n]]; // or, and
       for (let bit = 0n; bit < 36n; bit++) {
         let b = 1n << bit;
         if (masks[2] & b) {
