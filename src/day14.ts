@@ -60,7 +60,6 @@ function parse(l: string): Inf {
 
 function solvea(infs: Inf[]) {
   let mem: Map<bigint, bigint> = new Map();
-
   let masks: bigint[] = [];
 
   for (let inf of infs) {
@@ -85,12 +84,8 @@ function solvea(infs: Inf[]) {
       }
     }
   }
-  let ans: bigint = 0n;
-  for (let v of mem.values()) {
-    ans += v;
-  }
 
-  return ans;
+  return [...mem.values()].reduce((a, b) => a + b);
 }
 
 function solveb(infs: Inf[]) {}
