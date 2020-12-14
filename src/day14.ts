@@ -66,6 +66,24 @@ function solvea(infs: Inf[]) {
     if (inf.type === "mask") {
       masks = inf.masks;
     } else if (inf.type === "set") {
+      let v = inf.v;
+      v = v | masks[0];
+      v = v & masks[1];
+      mem.set(inf.addr, v);
+    }
+  }
+
+  return [...mem.values()].reduce((a, b) => a + b);
+}
+
+function solveb(infs: Inf[]) {
+  let mem: Map<bigint, bigint> = new Map();
+  let masks: bigint[] = [];
+
+  for (let inf of infs) {
+    if (inf.type === "mask") {
+      masks = inf.masks;
+    } else if (inf.type === "set") {
       let pairs = [[0n, (1n << 37n) - 1n]]; // or, and
       for (let bit = 0n; bit < 36n; bit++) {
         let b = 1n << bit;
@@ -88,8 +106,6 @@ function solvea(infs: Inf[]) {
   return [...mem.values()].reduce((a, b) => a + b);
 }
 
-function solveb(infs: Inf[]) {}
-
 export async function run() {
   var text: string = await slurp("data/day14a.txt");
 
@@ -97,5 +113,9 @@ export async function run() {
 
   let a = solvea(infs);
   console.log(a);
-  assert(a === 3443997590975n);
+  assert(a === 15919415426101n);
+
+  let b = solveb(infs);
+  console.log(b);
+  assert(b === 3443997590975n);
 }
