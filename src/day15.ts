@@ -2,13 +2,13 @@ import { slurp } from "./util";
 
 type World = number[];
 
-function solvea(world: World) {
+function solvea(world: World, target: number) {
   console.log(world);
 
   let m: Map<number, number[]> = new Map();
 
   let last = -1;
-  for (let turn = 1; turn <= 30000000; turn++) {
+  for (let turn = 1; turn <= target; turn++) {
     let n;
     if (turn < world.length + 1) {
       n = world[turn - 1];
@@ -37,5 +37,6 @@ export async function run() {
   var text: string = await slurp("data/day15.txt");
   var world = text.split(/,/).map(n => parseInt(n));
 
-  solvea(world);
+  solvea(world, 2020);
+  solvea(world, 30000000);
 }
