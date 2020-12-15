@@ -1,6 +1,15 @@
 import { slurp } from "./util";
+import { performance } from "perf_hooks";
 
 type World = number[];
+
+function time(fun: any) {
+  let start = performance.now();
+  let result = fun();
+  let end = performance.now();
+
+  console.log("Elapsed:", end - start);
+}
 
 function solvea(world: World, target: number) {
   console.log(world);
@@ -20,10 +29,22 @@ function solvea(world: World, target: number) {
         n = ts[1] - ts[0];
       }
     }
-    let ts = m.get(n) || [];
-    ts.push(turn);
-    if (ts.length > 2) ts.shift();
-    m.set(n, ts);
+    {
+      let ts = m.get(n);
+      if (!ts) {
+        ts = [];
+        m.set(n, ts);
+      }
+
+      if (ts.length === 0) {
+        ts[0] = turn;
+      } else if (ts.length === 1) {
+        ts[1] = turn;
+      } else {
+        ts[0] = ts[1];
+        ts[1] = turn;
+      }
+    }
 
     last = n;
     if (turn % 1000000 === 0) {
@@ -37,6 +58,6 @@ export async function run() {
   var text: string = await slurp("data/day15.txt");
   var world = text.split(/,/).map(n => parseInt(n));
 
-  solvea(world, 2020);
-  solvea(world, 30000000);
+  time(() => solvea(world, 2020));
+  time(() => solvea(world, 30000000));
 }
