@@ -8,7 +8,7 @@ function solvea(world: World) {
   let m: Map<number, number[]> = new Map();
 
   let last = -1;
-  for (let turn = 1; turn <= 2020; turn++) {
+  for (let turn = 1; turn <= 30000000; turn++) {
     let n;
     if (turn < world.length + 1) {
       n = world[turn - 1];
@@ -26,8 +26,11 @@ function solvea(world: World) {
     m.set(n, ts);
 
     last = n;
+    if (turn % 1000000 === 0) {
+      console.log(turn, n);
+    }
   }
-  console.log(last);
+  console.log("=>", last);
 }
 
 export async function run() {
