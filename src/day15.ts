@@ -9,6 +9,7 @@ function time(fun: any) {
   let end = performance.now();
 
   console.log("Elapsed:", end - start);
+  return result;
 }
 
 function solvea(world: World, target: number) {
