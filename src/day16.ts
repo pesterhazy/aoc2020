@@ -3,7 +3,7 @@ import { slurp } from "./util";
 interface World {
   rules: Map<string, { lo: number; hi: number }[]>;
   mine: number[];
-  nearby: number[];
+  nearby: number[][];
 }
 
 function parse(s: string): World {
@@ -29,9 +29,9 @@ function parse(s: string): World {
       .split(/,/)
       .map(n => parseInt(n)),
     nearby: chunks[2]
-      .split(/\n/)[1]
-      .split(/,/)
-      .map(n => parseInt(n))
+      .split(/\n/)
+      .slice(1)
+      .map((l: string) => l.split(/,/).map(n => parseInt(n)))
   };
 }
 
