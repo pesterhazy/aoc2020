@@ -37,10 +37,24 @@ function parse(s: string): World {
 
 function solvea(world: World) {
   console.log(world);
+  let ans = 0;
+  for (let n of world.nearby.flatMap(xs => xs)) {
+    let valid = false;
+
+    for (let rule of [...world.rules.values()].flatMap(xs => xs)) {
+      if (n >= rule.lo && n <= rule.hi) {
+        valid = true;
+        break;
+      }
+    }
+
+    if (!valid) ans += n;
+  }
+  console.log(ans);
 }
 
 export async function run() {
-  var text: string = await slurp("data/day16.txt");
+  var text: string = await slurp("data/day16a.txt");
   var world = parse(text);
 
   solvea(world);
