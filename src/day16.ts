@@ -95,9 +95,11 @@ function solveb(world: World) {
   while (true) {
     let done = true;
     let progress = false;
+    console.log(candidates);
     for (let [id, options] of candidates) {
       if (options.size === 1) {
         let idx = [...options][0];
+        console.log("Found", id, idx);
 
         m.set(id, idx);
         for (let options of candidates.values()) options.delete(idx);
@@ -114,13 +116,12 @@ function solveb(world: World) {
   }
   console.log("m", m);
   console.log("mine", world.mine);
-  let sum = 0;
+  let product = 1;
   for (let [id, idx] of m) {
     if (!id.startsWith("departure")) continue;
-
-    sum += world.mine[idx];
+    product *= world.mine[idx];
   }
-  console.log("ans", sum);
+  console.log("ans", product);
 }
 
 export async function run() {
