@@ -54,7 +54,6 @@ function solvea(world: World) {
 function solveb(world: World) {
   const isValid = (n: number, rule: { lo: number; hi: number }) =>
     n >= rule.lo && n <= rule.hi;
-  console.log(world.rules);
   let tickets: number[][] = [];
   for (let ticket of world.nearby) {
     let ok = true;
@@ -95,12 +94,9 @@ function solveb(world: World) {
   while (true) {
     let done = true;
     let progress = false;
-    console.log(candidates);
     for (let [id, options] of candidates) {
       if (options.size === 1) {
         let idx = [...options][0];
-        console.log("Found", id, idx);
-
         m.set(id, idx);
         for (let options of candidates.values()) options.delete(idx);
         done = false;
@@ -114,14 +110,12 @@ function solveb(world: World) {
     if (done) break;
     if (!progress) throw "no progress";
   }
-  console.log("m", m);
-  console.log("mine", world.mine);
   let product = 1;
   for (let [id, idx] of m) {
     if (!id.startsWith("departure")) continue;
     product *= world.mine[idx];
   }
-  console.log("ans", product);
+  console.log(product);
 }
 
 export async function run() {
