@@ -113,6 +113,7 @@ function solveb(world: World) {
     if (!progress) throw "no progress";
   }
   console.log("m", m);
+  console.log("mine", world.mine);
   let sum = 0;
   for (let [id, idx] of m) {
     if (!id.startsWith("departure")) continue;
