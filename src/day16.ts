@@ -8,7 +8,6 @@ interface World {
 
 function parse(s: string): World {
   let chunks = s.split(/\n\n/);
-  console.log(chunks);
   let rules = new Map(
     chunks[0].split(/\n/).map(l => {
       let xs = l.split(/\W+/);
@@ -21,7 +20,6 @@ function parse(s: string): World {
       ];
     })
   );
-  console.log(rules);
   return {
     rules: rules,
     mine: chunks[1]
@@ -36,7 +34,6 @@ function parse(s: string): World {
 }
 
 function solvea(world: World) {
-  console.log(world);
   let ans = 0;
   for (let n of world.nearby.flatMap(xs => xs)) {
     let valid = false;
@@ -53,9 +50,33 @@ function solvea(world: World) {
   console.log(ans);
 }
 
+function solveb(world: World) {
+  console.log(world.rules);
+  let tickets: number[][] = [];
+  for (let ticket of world.nearby) {
+    let ok = true;
+    for (let n of ticket) {
+      let valid = false;
+      for (let rule of [...world.rules.values()].flatMap(xs => xs)) {
+        if (n >= rule.lo && n <= rule.hi) {
+          valid = true;
+          break;
+        }
+      }
+      if (!valid) {
+        ok = false;
+        break;
+      }
+    }
+
+    if (ok) tickets.push(ticket);
+  }
+  console.log(tickets);
+}
+
 export async function run() {
-  var text: string = await slurp("data/day16a.txt");
+  var text: string = await slurp("data/day16x.txt");
   var world = parse(text);
 
-  solvea(world);
+  solveb(world);
 }
