@@ -122,5 +122,6 @@ export async function run() {
   var text: string = await slurp("data/day16a.txt");
   var world = parse(text);
 
+  solvea(world);
   solveb(world);
 }
