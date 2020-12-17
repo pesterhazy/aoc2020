@@ -3,7 +3,7 @@ import { vec2, vec3, vec4 } from "gl-matrix";
 
 type Grid = Map<number, Map<number, Map<number, Map<number, string>>>>;
 
-function bounds(grid: Grid): [vec2, vec2, vec2, vec2] {
+function bounds4(grid: Grid): [vec2, vec2, vec2, vec2] {
   let r: [vec2, vec2, vec2, vec2] = [
     [Infinity, -Infinity],
     [Infinity, -Infinity],
@@ -30,7 +30,7 @@ function bounds(grid: Grid): [vec2, vec2, vec2, vec2] {
   return r;
 }
 
-function count(grid: Grid): number {
+function count4(grid: Grid): number {
   let r = 0;
   for (let a of grid.values())
     for (let b of a.values())
@@ -42,7 +42,7 @@ function count(grid: Grid): number {
   return r;
 }
 
-function peek(grid: Grid, p: vec4): string | undefined {
+function peek4(grid: Grid, p: vec4): string | undefined {
   let m: Map<number, any> = grid;
   if (!m.has(p[0])) return undefined;
   m = m.get(p[0]);
@@ -53,7 +53,7 @@ function peek(grid: Grid, p: vec4): string | undefined {
   return m.get(p[3]);
 }
 
-function poke(grid: Grid, p: vec4, v: string) {
+function poke4(grid: Grid, p: vec4, v: string) {
   let m: Map<number, any> = grid;
   if (!m.has(p[0])) m.set(p[0], new Map());
   m = m.get(p[0]);
@@ -64,7 +64,7 @@ function poke(grid: Grid, p: vec4, v: string) {
   m.set(p[3], v);
 }
 
-function makeDeltas(): vec4[] {
+function makeDeltas4(): vec4[] {
   let r: vec4[] = [];
   for (let x = -1; x <= 1; x++) {
     for (let y = -1; y <= 1; y++) {
@@ -80,7 +80,7 @@ function makeDeltas(): vec4[] {
   return r;
 }
 
-const DELTAS = makeDeltas();
+const DELTAS4 = makeDeltas4();
 
 // function print(grid: Grid) {
 //   let b = bounds(grid);
@@ -100,9 +100,9 @@ const DELTAS = makeDeltas();
 //   }
 // }
 
-function next(grid: Grid): Grid {
+function next4(grid: Grid): Grid {
   let r: Grid = new Map();
-  let b = bounds(grid);
+  let b = bounds4(grid);
 
   for (let x = b[0][0] - 1; x <= b[0][1] + 1; x++) {
     for (let y = b[1][0] - 1; y <= b[1][1] + 1; y++) {
@@ -110,14 +110,14 @@ function next(grid: Grid): Grid {
         for (let w = b[3][0] - 1; w <= b[3][1] + 1; w++) {
           let p: vec4 = [x, y, z, w];
           let neighbors = 0;
-          for (let delta of DELTAS) {
+          for (let delta of DELTAS4) {
             let pp = vec4.add(vec4.create(), p, delta);
-            if (peek(grid, pp) === "#") neighbors++;
+            if (peek4(grid, pp) === "#") neighbors++;
           }
-          let v = peek(grid, p);
+          let v = peek4(grid, p);
           if (v === "#" && !(neighbors === 2 || neighbors === 3)) v = ".";
           else if (v !== "#" && neighbors === 3) v = "#";
-          if (v === "#") poke(r, p, v);
+          if (v === "#") poke4(r, p, v);
         }
       }
     }
@@ -126,33 +126,26 @@ function next(grid: Grid): Grid {
   return r;
 }
 
-function parse(lines: string[]): Grid {
+function parse4(lines: string[]): Grid {
   let grid: Grid = new Map();
   for (let y = 0; y < lines.length; y++) {
     for (let x = 0; x < lines[0].length; x++) {
-      poke(grid, [x, y, 0, 0], lines[y][x]);
+      poke4(grid, [x, y, 0, 0], lines[y][x]);
     }
   }
   return grid;
 }
 
-function solvea(grid: Grid) {
+function solveb(grid: Grid) {
   for (let i = 0; i < 6; i++) {
-    console.log("***");
-    // print(grid);
-    console.log(count(grid));
-    grid = next(grid);
+    grid = next4(grid);
   }
-
-  console.log("***");
-  // print(grid);
-  console.log(count(grid));
+  console.log(count4(grid));
 }
 
 export async function run() {
   var text: string = await slurp("data/day17a.txt");
 
-  var grid = parse(text.split(/\n/));
-
-  solvea(grid);
+  var grid = parse4(text.split(/\n/));
+  solveb(grid);
 }
