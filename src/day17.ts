@@ -67,6 +67,23 @@ function makeDeltas(): vec3[] {
 
 const DELTAS = makeDeltas();
 
+function print(grid: Grid) {
+  let b = bounds(grid);
+
+  for (let z = b[2][0]; z <= b[2][1]; z++) {
+    console.log("z=" + z);
+    for (let y = b[1][0]; y <= b[1][1]; y++) {
+      let s = "";
+      for (let x = b[0][0]; x <= b[0][1]; x++) {
+        let p: vec3 = [x, y, z];
+        let v = peek(grid, p) || ".";
+        s += v;
+      }
+      console.log(s);
+    }
+  }
+}
+
 function next(grid: Grid): Grid {
   let r: Grid = new Map();
   let b = bounds(grid);
@@ -78,7 +95,7 @@ function next(grid: Grid): Grid {
         let neighbors = 0;
         for (let delta of DELTAS) {
           let pp = vec3.add(vec3.create(), p, delta);
-          if (peek(grid, pp)) neighbors++;
+          if (peek(grid, pp) === "#") neighbors++;
         }
         let v = peek(grid, p) || ".";
         if (v === "#" && (neighbors === 2 || neighbors == 3)) v = ".";
@@ -100,14 +117,16 @@ function parse(lines: string[]): Grid {
 }
 
 function solvea(grid: Grid) {
-  console.log(grid);
-  console.log(count(grid));
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 2; i++) {
     console.log("***");
-    grid = next(grid);
-    // console.log(grid);
+    print(grid);
     console.log(count(grid));
+    grid = next(grid);
   }
+
+  console.log("***");
+  print(grid);
+  console.log(count(grid));
 }
 
 export async function run() {
