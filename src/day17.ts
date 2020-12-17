@@ -1,4 +1,4 @@
-import { slurp } from "./util";
+import { slurp, time } from "./util";
 import { vec2, vec3, vec4 } from "gl-matrix";
 
 // 3d
@@ -238,6 +238,6 @@ function solveb(grid: Grid4) {
 export async function run() {
   var text: string = await slurp("data/day17a.txt");
 
-  solvea(parse3(text.split(/\n/)));
-  solveb(parse4(text.split(/\n/)));
+  time(() => solvea(parse3(text.split(/\n/))));
+  time(() => solveb(parse4(text.split(/\n/))));
 }

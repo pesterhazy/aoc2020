@@ -1,16 +1,6 @@
-import { slurp } from "./util";
-import { performance } from "perf_hooks";
+import { slurp, time } from "./util";
 
 type World = number[];
-
-function time(fun: any) {
-  let start = performance.now();
-  let result = fun();
-  let end = performance.now();
-
-  console.log("Elapsed:", end - start);
-  return result;
-}
 
 function solvea(world: World, target: number) {
   console.log(world);
