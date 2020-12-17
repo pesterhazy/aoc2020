@@ -1,9 +1,9 @@
 import { slurp } from "./util";
 import { vec2, vec3, vec4 } from "gl-matrix";
 
-type Grid = Map<number, Map<number, Map<number, Map<number, string>>>>;
+type Grid4 = Map<number, Map<number, Map<number, Map<number, string>>>>;
 
-function bounds4(grid: Grid): [vec2, vec2, vec2, vec2] {
+function bounds4(grid: Grid4): [vec2, vec2, vec2, vec2] {
   let r: [vec2, vec2, vec2, vec2] = [
     [Infinity, -Infinity],
     [Infinity, -Infinity],
@@ -30,7 +30,7 @@ function bounds4(grid: Grid): [vec2, vec2, vec2, vec2] {
   return r;
 }
 
-function count4(grid: Grid): number {
+function count4(grid: Grid4): number {
   let r = 0;
   for (let a of grid.values())
     for (let b of a.values())
@@ -42,7 +42,7 @@ function count4(grid: Grid): number {
   return r;
 }
 
-function peek4(grid: Grid, p: vec4): string | undefined {
+function peek4(grid: Grid4, p: vec4): string | undefined {
   let m: Map<number, any> = grid;
   if (!m.has(p[0])) return undefined;
   m = m.get(p[0]);
@@ -53,7 +53,7 @@ function peek4(grid: Grid, p: vec4): string | undefined {
   return m.get(p[3]);
 }
 
-function poke4(grid: Grid, p: vec4, v: string) {
+function poke4(grid: Grid4, p: vec4, v: string) {
   let m: Map<number, any> = grid;
   if (!m.has(p[0])) m.set(p[0], new Map());
   m = m.get(p[0]);
@@ -82,26 +82,8 @@ function makeDeltas4(): vec4[] {
 
 const DELTAS4 = makeDeltas4();
 
-// function print(grid: Grid) {
-//   let b = bounds(grid);
-
-//   for (let z = b[2][0]; z <= b[2][1]; z++) {
-//     console.log("z=" + z);
-//     for (let y = b[1][0]; y <= b[1][1]; y++) {
-//       let s = "";
-//       for (let x = b[0][0]; x <= b[0][1]; x++) {
-//         let p: vec3 = [x, y, z];
-//         let v = peek(grid, p) || ".";
-//         s += v;
-//       }
-//       console.log(s);
-//     }
-//     console.log();
-//   }
-// }
-
-function next4(grid: Grid): Grid {
-  let r: Grid = new Map();
+function next4(grid: Grid4): Grid4 {
+  let r: Grid4 = new Map();
   let b = bounds4(grid);
 
   for (let x = b[0][0] - 1; x <= b[0][1] + 1; x++) {
@@ -126,8 +108,8 @@ function next4(grid: Grid): Grid {
   return r;
 }
 
-function parse4(lines: string[]): Grid {
-  let grid: Grid = new Map();
+function parse4(lines: string[]): Grid4 {
+  let grid: Grid4 = new Map();
   for (let y = 0; y < lines.length; y++) {
     for (let x = 0; x < lines[0].length; x++) {
       poke4(grid, [x, y, 0, 0], lines[y][x]);
@@ -136,7 +118,7 @@ function parse4(lines: string[]): Grid {
   return grid;
 }
 
-function solveb(grid: Grid) {
+function solveb(grid: Grid4) {
   for (let i = 0; i < 6; i++) {
     grid = next4(grid);
   }
