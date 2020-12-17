@@ -88,8 +88,8 @@ function next(grid: Grid): Grid {
   let r: Grid = new Map();
   let b = bounds(grid);
 
-  for (let x = b[0][0] - 1; x <= b[0][1] + 1; x++)
-    for (let y = b[1][0] - 1; y <= b[1][1] + 1; y++)
+  for (let x = b[0][0] - 1; x <= b[0][1] + 1; x++) {
+    for (let y = b[1][0] - 1; y <= b[1][1] + 1; y++) {
       for (let z = b[2][0] - 1; z <= b[2][1] + 1; z++) {
         let p: vec3 = [x, y, z];
         let neighbors = 0;
@@ -98,10 +98,12 @@ function next(grid: Grid): Grid {
           if (peek(grid, pp) === "#") neighbors++;
         }
         let v = peek(grid, p);
-        if (v === "#" && (neighbors === 2 || neighbors === 3)) v = ".";
+        if (v === "#" && !(neighbors === 2 || neighbors === 3)) v = ".";
         else if (v !== "#" && neighbors === 3) v = "#";
         if (v === "#") poke(r, p, v);
       }
+    }
+  }
 
   return r;
 }
@@ -117,20 +119,20 @@ function parse(lines: string[]): Grid {
 }
 
 function solvea(grid: Grid) {
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 6; i++) {
     console.log("***");
-    print(grid);
+    // print(grid);
     console.log(count(grid));
     grid = next(grid);
   }
 
   console.log("***");
-  print(grid);
+  // print(grid);
   console.log(count(grid));
 }
 
 export async function run() {
-  var text: string = await slurp("data/day17.txt");
+  var text: string = await slurp("data/day17a.txt");
 
   var grid = parse(text.split(/\n/));
 
