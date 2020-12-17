@@ -25,9 +25,9 @@ function bounds(grid: Grid): [vec2, vec2, vec2] {
 
 function count(grid: Grid): number {
   let r = 0;
-  for (let [x, a] of grid)
-    for (let [y, b] of a)
-      for (let [_, v] of b) {
+  for (let a of grid.values())
+    for (let b of a.values())
+      for (let v of b.values()) {
         if (v === "#") r++;
       }
 
@@ -61,7 +61,6 @@ function makeDeltas(): vec3[] {
 
         r.push([x, y, z]);
       }
-
   return r;
 }
 
@@ -81,6 +80,7 @@ function print(grid: Grid) {
       }
       console.log(s);
     }
+    console.log();
   }
 }
 
@@ -97,10 +97,10 @@ function next(grid: Grid): Grid {
           let pp = vec3.add(vec3.create(), p, delta);
           if (peek(grid, pp) === "#") neighbors++;
         }
-        let v = peek(grid, p) || ".";
-        if (v === "#" && (neighbors === 2 || neighbors == 3)) v = ".";
-        else if (v === "." && neighbors == 3) v = "#";
-        poke(r, p, v);
+        let v = peek(grid, p);
+        if (v === "#" && (neighbors === 2 || neighbors === 3)) v = ".";
+        else if (v !== "#" && neighbors === 3) v = "#";
+        if (v === "#") poke(r, p, v);
       }
 
   return r;
