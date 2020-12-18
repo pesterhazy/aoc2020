@@ -31,7 +31,7 @@ function evalExpr(e: Expr): number {
   throw "Invalid op";
 }
 
-function solveb(infs: Inf[]) {
+function solveb(infs: Inf[], priority: string | undefined) {
   let ans = 0;
   for (let inf of infs) {
     if (!inf) continue;
@@ -56,14 +56,21 @@ function solveb(infs: Inf[]) {
 
       while (true) {
         let t = nextToken();
-        if (t === undefined || t === ")") {
-          return a;
-        } else if (t === "+") {
-          let b = nextNum();
-          a = { tag: "op", op: t, a, b };
-        } else if (t === "*") {
-          return { tag: "op", op: t, a, b: nextExpr() };
-        } else throw "Unexpected token: " + t;
+        switch (t) {
+          case undefined:
+          case ")":
+            return a;
+          case "+":
+          case "*":
+            if (t === priority) {
+              a = { tag: "op", op: t, a, b: nextNum() };
+              break;
+            } else {
+              return { tag: "op", op: t, a, b: nextExpr() };
+            }
+          default:
+            throw "Unexpected token: " + t;
+        }
       }
     }
     let e = nextExpr();
@@ -76,5 +83,5 @@ export async function run() {
   var text: string = await slurp("data/day18.txt");
 
   let infs: Inf[] = text.split(/\n/).map(parse);
-  assert.equal(solveb(infs), 381107029777968);
+  assert.equal(solveb(infs, "+"), 381107029777968);
 }
