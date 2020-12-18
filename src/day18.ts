@@ -77,6 +77,8 @@ function solve(infs: Inf[], lo: string | undefined) {
   return ans;
 }
 
+// **************************************
+// Alternative solution:
 // Dijkstra's shunting yard algorithm
 
 function evalRPN(es: string[]): number {
