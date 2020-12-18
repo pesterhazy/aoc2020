@@ -31,7 +31,7 @@ function evalExpr(e: Expr): number {
   throw "Invalid op";
 }
 
-function solvea(infs: Inf[]) {
+function solveb(infs: Inf[]) {
   let ans = 0;
   for (let inf of infs) {
     if (!inf) continue;
@@ -82,12 +82,12 @@ function solvea(infs: Inf[]) {
     let e = nextExpr();
     ans += evalExpr(e);
   }
-  console.log(ans);
+  return ans;
 }
 
 export async function run() {
   var text: string = await slurp("data/day18.txt");
 
   let infs: Inf[] = text.split(/\n/).map(parse);
-  solvea(infs);
+  assert.equal(solveb(infs), 381107029777968);
 }
