@@ -23,10 +23,18 @@ interface NumExpr {
   n: number;
 }
 
+function evalExpr(e: Expr): number {
+  if (e.tag === "num") return e.n;
+
+  if (e.op === "+") return evalExpr(e.a) + evalExpr(e.b);
+  else if (e.op === "*") return evalExpr(e.a) * evalExpr(e.b);
+  throw "Invalid op";
+}
+
 function solvea(infs: Inf[]) {
+  let ans = 0;
   for (let inf of infs) {
     if (!inf) continue;
-    console.log("INF", inf);
     let tokens = [...inf];
     function nextToken(): string | undefined {
       return tokens.shift();
@@ -60,7 +68,7 @@ function solvea(infs: Inf[]) {
           if (t3 === "(") {
             b = nextExpr();
           } else {
-            let n = parseInt(t);
+            let n = parseInt(t3);
             assert(!isNaN(n));
 
             b = { tag: "num", n: n };
@@ -72,12 +80,13 @@ function solvea(infs: Inf[]) {
       }
     }
     let e = nextExpr();
-    console.log(e);
+    ans += evalExpr(e);
   }
+  console.log(ans);
 }
 
 export async function run() {
-  var text: string = await slurp("data/day18y.txt");
+  var text: string = await slurp("data/day18.txt");
 
   let infs: Inf[] = text.split(/\n/).map(parse);
   solvea(infs);
