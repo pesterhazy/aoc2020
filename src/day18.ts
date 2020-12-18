@@ -117,7 +117,10 @@ function solve2(infs: Inf[], lo: string | undefined): number {
       return tokens.shift();
     }
 
-    const isHigher = (a: string, b: string) => true;
+    const isHigher = (a: string, b: string) => {
+      if (lo === undefined) return true;
+      else return b === lo && a !== lo;
+    };
 
     while (true) {
       let t = nextToken();
@@ -160,5 +163,5 @@ export async function run() {
 
   let infs: Inf[] = text.split(/\n/).map(parse);
   assert.equal(solve2(infs, undefined), 36382392389406);
-  // assert.equal(solve(infs, "*"), 381107029777968);
+  assert.equal(solve2(infs, "*"), 381107029777968);
 }
