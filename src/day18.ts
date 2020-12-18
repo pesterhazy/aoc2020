@@ -24,19 +24,6 @@ function solvea(infs: Inf[]) {
       if (token === "(") {
         assert(stack[0].mode === "+" || stack[0].mode === "*");
         stack.unshift(Object.assign({}, INIT));
-      } else if (token === ")") {
-        if (stack.length < 2) throw "boom";
-        let n: number = stack.shift()!.acc;
-        switch (stack[0].mode) {
-          case "+":
-            stack[0].acc += n;
-            break;
-          case "*":
-            stack[0].acc *= n;
-            break;
-          default:
-            throw "Unexpected: " + stack[0].mode;
-        }
       } else if (token === "+") {
         assert(stack[0].mode === "num");
         stack[0].mode = "+";
@@ -44,8 +31,14 @@ function solvea(infs: Inf[]) {
         assert(stack[0].mode === "num");
         stack[0].mode = "*";
       } else {
-        let n = parseInt(token);
-        assert(!isNaN(n));
+        let n: number;
+        if (token === ")") {
+          if (stack.length < 2) throw "boom";
+          n = stack.shift()!.acc;
+        } else {
+          n = parseInt(token);
+          assert(!isNaN(n));
+        }
         switch (stack[0].mode) {
           case "+":
             stack[0].acc += n;
