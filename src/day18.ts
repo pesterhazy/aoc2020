@@ -43,7 +43,7 @@ function solveb(infs: Inf[]) {
       let a: Expr;
 
       let t = nextToken();
-      if (t === undefined) throw "xxx";
+      if (t === undefined) throw "Expected token";
       if (t === "(") {
         a = nextExpr();
       } else {
@@ -57,10 +57,7 @@ function solveb(infs: Inf[]) {
         let t2 = nextToken();
         if (t2 === undefined || t2 === ")") {
           return a;
-        }
-        if (!(t2 === "+" || t2 === "*")) throw "Unexpected token: " + t2;
-
-        if (t2 === "+") {
+        } else if (t2 === "+") {
           let b: Expr;
 
           let t3 = nextToken();
@@ -74,9 +71,9 @@ function solveb(infs: Inf[]) {
             b = { tag: "num", n: n };
           }
           a = { tag: "op", op: t2, a, b };
-        } else {
+        } else if (t2 === "*") {
           return { tag: "op", op: t2, a, b: nextExpr() };
-        }
+        } else throw "Unexpected token: " + t2;
       }
     }
     let e = nextExpr();
