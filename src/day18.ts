@@ -39,41 +39,31 @@ function solveb(infs: Inf[]) {
     function nextToken(): string | undefined {
       return tokens.shift();
     }
-    function nextExpr(): Expr {
-      let a: Expr;
-
+    function nextNum(): Expr {
       let t = nextToken();
       if (t === undefined) throw "Expected token";
       if (t === "(") {
-        a = nextExpr();
+        return nextExpr();
       } else {
         let n = parseInt(t);
         assert(!isNaN(n));
 
-        a = { tag: "num", n: n };
+        return { tag: "num", n: n };
       }
+    }
+    function nextExpr(): Expr {
+      let a = nextNum();
 
       while (true) {
-        let t2 = nextToken();
-        if (t2 === undefined || t2 === ")") {
+        let t = nextToken();
+        if (t === undefined || t === ")") {
           return a;
-        } else if (t2 === "+") {
-          let b: Expr;
-
-          let t3 = nextToken();
-          if (t3 === undefined) throw "xxx";
-          if (t3 === "(") {
-            b = nextExpr();
-          } else {
-            let n = parseInt(t3);
-            assert(!isNaN(n));
-
-            b = { tag: "num", n: n };
-          }
-          a = { tag: "op", op: t2, a, b };
-        } else if (t2 === "*") {
-          return { tag: "op", op: t2, a, b: nextExpr() };
-        } else throw "Unexpected token: " + t2;
+        } else if (t === "+") {
+          let b = nextNum();
+          a = { tag: "op", op: t, a, b };
+        } else if (t === "*") {
+          return { tag: "op", op: t, a, b: nextExpr() };
+        } else throw "Unexpected token: " + t;
       }
     }
     let e = nextExpr();
