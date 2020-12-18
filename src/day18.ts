@@ -9,57 +9,53 @@ function parse(s: string): Inf {
   return s.match(/(\d+|[*+()])/g)!;
 }
 
-interface State {
-  op: "num" | "+" | "*";
-  acc: number;
+type Expr = OpExpr | NumExpr;
+
+interface OpExpr {
+  tag: "op";
+  op: "+";
+  a: Expr;
+  b: Expr;
 }
 
-const INIT: State = { op: "+", acc: 0 };
+interface NumExpr {
+  tag: "num";
+  n: number;
+}
 
 function solvea(infs: Inf[]) {
-  let sum = 0;
   for (let inf of infs) {
-    let stack: State[] = [{ ...INIT }];
-    for (let token of inf) {
-      if (token === "(") {
-        assert(stack[0].op === "+" || stack[0].op === "*");
-        stack.unshift({ ...INIT });
-      } else if (token === "+") {
-        assert(stack[0].op === "num");
-        stack[0].op = "+";
-      } else if (token === "*") {
-        assert(stack[0].op === "num");
-        stack[0].op = "*";
+    if (!inf) continue;
+    console.log("INF", inf);
+    let tokens = [...inf];
+    function nextToken(): string | undefined {
+      return tokens.shift();
+    }
+    function nextExpr(): Expr {
+      let t = nextToken();
+      if (t === undefined) throw "xxx";
+      let n = parseInt(t);
+      assert(!isNaN(n));
+      let a: Expr = { tag: "num", n: n };
+
+      let t2 = nextToken();
+      if (t2 === undefined) {
+        return a;
       } else {
-        let n: number;
-        if (token === ")") {
-          if (stack.length < 2) throw "boom";
-          n = stack.shift()!.acc;
-        } else {
-          n = parseInt(token);
-          assert(!isNaN(n));
-        }
-        switch (stack[0].op) {
-          case "+":
-            stack[0].acc += n;
-            break;
-          case "*":
-            stack[0].acc *= n;
-            break;
-          default:
-            throw "Unexpected op";
-        }
-        stack[0].op = "num";
+        assert(t2 === "+");
+
+        let b: Expr = nextExpr();
+
+        return { tag: "op", op: "+", a, b };
       }
     }
-    assert(stack.length === 1);
-    sum += stack[0].acc;
+    let e = nextExpr();
+    console.log(e);
   }
-  console.log(sum);
 }
 
 export async function run() {
-  var text: string = await slurp("data/day18.txt");
+  var text: string = await slurp("data/day18y.txt");
 
   let infs: Inf[] = text.split(/\n/).map(parse);
   solvea(infs);
