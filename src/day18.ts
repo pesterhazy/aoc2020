@@ -121,24 +121,24 @@ function solve2(infs: Inf[], lo: string | undefined): number {
 
     while (true) {
       let t = nextToken();
-      // console.log(t, ops, q);
 
       if (t === undefined) break;
 
       if (/^\d+$/.test(t)) {
         q.push(t);
       } else if (t === "+" || t === "*") {
-        while (ops.length > 0 && isHigher(ops[0], t)) {
+        while (ops.length > 0 && ops[0] !== "(" && isHigher(ops[0], t)) {
           let op = ops.shift();
           if (op === undefined) throw "err";
-          q.push(op);
+          if (op !== "(") q.push(op);
         }
         ops.unshift(t);
       } else if (t === "(") {
+        ops.unshift(t);
       } else if (t === ")") {
-        while (ops.length > 0 && ops[0] !== "(") {
+        while (ops[0] !== "(") {
           let op = ops.shift();
-          if (op === undefined) throw "err";
+          if (op === undefined) throw "err!?";
           q.push(op);
         }
         ops.shift();
@@ -149,9 +149,7 @@ function solve2(infs: Inf[], lo: string | undefined): number {
       if (op === undefined) throw "err";
       q.push(op);
     }
-    // console.log(q);
     let result = evalRPN(q);
-    // console.log(result);
     ans += result;
   }
   return ans;
