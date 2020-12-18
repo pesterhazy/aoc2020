@@ -13,7 +13,7 @@ type Expr = OpExpr | NumExpr;
 
 interface OpExpr {
   tag: "op";
-  op: "+";
+  op: "+" | "*";
   a: Expr;
   b: Expr;
 }
@@ -32,21 +32,43 @@ function solvea(infs: Inf[]) {
       return tokens.shift();
     }
     function nextExpr(): Expr {
+      let a: Expr;
+
       let t = nextToken();
       if (t === undefined) throw "xxx";
-      let n = parseInt(t);
-      assert(!isNaN(n));
-      let a: Expr = { tag: "num", n: n };
-
-      let t2 = nextToken();
-      if (t2 === undefined) {
-        return a;
+      if (t === "(") {
+        a = nextExpr();
       } else {
-        assert(t2 === "+");
+        let n = parseInt(t);
+        assert(!isNaN(n));
 
-        let b: Expr = nextExpr();
+        a = { tag: "num", n: n };
+      }
 
-        return { tag: "op", op: "+", a, b };
+      while (true) {
+        let t2 = nextToken();
+        if (t2 === undefined || t2 === ")") {
+          return a;
+        }
+        if (!(t2 === "+" || t2 === "*")) throw "Unexpected token: " + t2;
+
+        if (t2 === "+") {
+          let b: Expr;
+
+          let t3 = nextToken();
+          if (t3 === undefined) throw "xxx";
+          if (t3 === "(") {
+            b = nextExpr();
+          } else {
+            let n = parseInt(t);
+            assert(!isNaN(n));
+
+            b = { tag: "num", n: n };
+          }
+          a = { tag: "op", op: t2, a, b };
+        } else {
+          return { tag: "op", op: t2, a, b: nextExpr() };
+        }
       }
     }
     let e = nextExpr();
