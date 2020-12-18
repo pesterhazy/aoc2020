@@ -17,13 +17,13 @@ interface State {
 const INIT: State = { op: "+", acc: 0 };
 
 function solvea(infs: Inf[]) {
+  let sum = 0;
   for (let inf of infs) {
-    let stack: State[] = [Object.assign({}, INIT)];
-
+    let stack: State[] = [{ ...INIT }];
     for (let token of inf) {
       if (token === "(") {
         assert(stack[0].op === "+" || stack[0].op === "*");
-        stack.unshift(Object.assign({}, INIT));
+        stack.unshift({ ...INIT });
       } else if (token === "+") {
         assert(stack[0].op === "num");
         stack[0].op = "+";
@@ -52,12 +52,14 @@ function solvea(infs: Inf[]) {
         stack[0].op = "num";
       }
     }
-    console.log(stack[0].acc);
+    assert(stack.length === 1);
+    sum += stack[0].acc;
   }
+  console.log(sum);
 }
 
 export async function run() {
-  var text: string = await slurp("data/day18x.txt");
+  var text: string = await slurp("data/day18.txt");
 
   let infs: Inf[] = text.split(/\n/).map(parse);
   solvea(infs);
