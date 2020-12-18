@@ -10,11 +10,11 @@ function parse(s: string): Inf {
 }
 
 interface State {
-  mode: "num" | "+" | "*";
+  op: "num" | "+" | "*";
   acc: number;
 }
 
-const INIT: State = { mode: "+", acc: 0 };
+const INIT: State = { op: "+", acc: 0 };
 
 function solvea(infs: Inf[]) {
   for (let inf of infs) {
@@ -22,14 +22,14 @@ function solvea(infs: Inf[]) {
 
     for (let token of inf) {
       if (token === "(") {
-        assert(stack[0].mode === "+" || stack[0].mode === "*");
+        assert(stack[0].op === "+" || stack[0].op === "*");
         stack.unshift(Object.assign({}, INIT));
       } else if (token === "+") {
-        assert(stack[0].mode === "num");
-        stack[0].mode = "+";
+        assert(stack[0].op === "num");
+        stack[0].op = "+";
       } else if (token === "*") {
-        assert(stack[0].mode === "num");
-        stack[0].mode = "*";
+        assert(stack[0].op === "num");
+        stack[0].op = "*";
       } else {
         let n: number;
         if (token === ")") {
@@ -39,7 +39,7 @@ function solvea(infs: Inf[]) {
           n = parseInt(token);
           assert(!isNaN(n));
         }
-        switch (stack[0].mode) {
+        switch (stack[0].op) {
           case "+":
             stack[0].acc += n;
             break;
@@ -47,9 +47,9 @@ function solvea(infs: Inf[]) {
             stack[0].acc *= n;
             break;
           default:
-            throw ":(";
+            throw "Unexpected op";
         }
-        stack[0].mode = "num";
+        stack[0].op = "num";
       }
     }
     console.log(stack[0].acc);
