@@ -79,7 +79,7 @@ function solvea(world: World) {
 }
 
 export async function run() {
-  var text: string = await slurp("data/day19.txt");
+  var text: string = await slurp("data/day19a.txt");
   var world = parse(text);
 
   solvea(world);
