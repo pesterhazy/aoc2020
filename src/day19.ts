@@ -91,21 +91,6 @@ function solve(world: World) {
 }
 
 export async function run() {
-  var text: string = patch(await slurp("data/day19a.txt"));
-
-  let ruleset: Ruleset = new Map();
-
-  ruleset.set(0, { type: "char", char: "a" });
-  ruleset.set(1, { type: "char", char: "b" });
-  ruleset.set(2, { type: "alt", alts: [[0], [1]] });
-  ruleset.set(3, { type: "alt", alts: [[0, 1]] });
-  assert.equal(matches(ruleset, 0, "a"), true);
-  assert.equal(matches(ruleset, 1, "a"), false);
-  assert.equal(matches(ruleset, 2, "a"), true);
-  assert.equal(matches(ruleset, 2, "b"), true);
-  assert.equal(matches(ruleset, 2, "c"), false);
-  assert.equal(matches(ruleset, 3, "ab"), true);
-  assert.equal(matches(ruleset, 3, "ba"), false);
-
-  solve(parse(text));
+  solve(parse(await slurp("data/day19a.txt")));
+  solve(parse(patch(await slurp("data/day19a.txt"))));
 }
