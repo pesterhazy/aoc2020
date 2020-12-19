@@ -62,6 +62,7 @@ function matches(
 ): boolean {
   let jobs: Job[] = [{ s: initialS, rids: [initialRid] }];
 
+  // depth-first search with stack
   while (jobs.length > 0) {
     let job = jobs.shift()!;
 
