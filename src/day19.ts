@@ -71,9 +71,16 @@ function matches(world: World, s: string, ridx: number): number {
 function solvea(world: World) {
   // console.log(inspect(world, { showHidden: false, depth: null }));
   let valid = 0;
-  for (let sample of world.samples) {
+  for (let [idx, sample] of world.samples.entries()) {
+    if (idx !== 2) continue;
+    console.log(sample);
     let r = matches(world, sample, 0);
-    if (r === sample.length) valid++;
+    if (r === sample.length) {
+      console.log("YES", r, sample.length);
+      valid++;
+    } else {
+      console.log("NO", r, sample.length);
+    }
   }
   console.log(valid);
 }
@@ -86,6 +93,6 @@ function patch(text: string): string {
 
 export async function run() {
   var text: string = await slurp("data/day19x.txt");
-  solvea(parse(text));
+  // solvea(parse(text));
   solvea(parse(patch(text)));
 }
