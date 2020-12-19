@@ -1,7 +1,7 @@
 import { slurp } from "./util";
 import { strict as assert } from "assert";
 import baretest from "baretest";
-const test = baretest("aoc");
+const test = baretest("day19");
 
 interface CharRule {
   type: "char";
