@@ -1,5 +1,7 @@
 import { slurp } from "./util";
 import { strict as assert } from "assert";
+import baretest from "baretest";
+const test = baretest("aoc");
 
 interface CharRule {
   type: "char";
@@ -86,11 +88,27 @@ function matches(
   return false;
 }
 
+test("ruleset", function() {
+  let ruleset: Ruleset = new Map();
+
+  ruleset.set(0, {
+    type: "alt",
+    alts: [
+      [1, 2],
+      [2, 1]
+    ]
+  });
+  ruleset.set(1, { type: "char", char: "a" });
+  ruleset.set(2, { type: "char", char: "b" });
+  assert.equal(true, matches(ruleset, 0, "ab"));
+});
+
 function solve(world: World) {
   console.log(world.samples.filter(s => matches(world.rules, 0, s)).length);
 }
 
 export async function run() {
+  await test.run();
   solve(parse(await slurp("data/day19a.txt")));
   solve(parse(patch(await slurp("data/day19a.txt"))));
 }
