@@ -22,7 +22,6 @@ function parse(s: string): World {
   let rules: Map<number, Rule> = new Map();
   let ss = s.split(/\n\n/);
   for (let l of ss[0].split(/\n/)) {
-    console.log(l);
     let [idx, ll] = l.split(/:/);
 
     let m = ll.match(/"(.)"/);
@@ -43,8 +42,40 @@ function parse(s: string): World {
   return { rules, samples };
 }
 
+function matches(world: World, s: string, ridx: number): number {
+  let rule = world.rules.get(ridx);
+  if (!rule) {
+    throw "Not found";
+  }
+  if (rule.type === "char") {
+    if (s[0] === rule.char) return 1;
+    else return -1;
+  } else {
+    for (let alt of rule.alts) {
+      let valid = true;
+      let pos = 0;
+      for (let idx of alt) {
+        let r = matches(world, s.substring(pos), idx);
+        if (r === -1) {
+          valid = false;
+          break;
+        }
+        pos += r;
+      }
+      if (valid) return pos;
+    }
+    return -1;
+  }
+}
+
 function solvea(world: World) {
-  console.log(inspect(world, { showHidden: false, depth: null }));
+  // console.log(inspect(world, { showHidden: false, depth: null }));
+  let valid = 0;
+  for (let sample of world.samples) {
+    let r = matches(world, sample, 0);
+    if (r === sample.length) valid++;
+  }
+  console.log(valid);
 }
 
 export async function run() {
