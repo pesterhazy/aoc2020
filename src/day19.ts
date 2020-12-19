@@ -42,29 +42,31 @@ function parse(s: string): World {
   return { rules, samples };
 }
 
-function matches(world: World, s: string, ridx: number): number {
+function matches(world: World, s: string, ridx: number): number[] {
+  function matchesList(s: string, ridxs: number[]): number[] {
+    if (ridxs.length === 0) return [0];
+
+    let result = [];
+    for (let pos of matches(world, s, ridxs[0])) {
+      for (let len of matchesList(s.substring(1), ridxs.slice(1)))
+        result.push(pos + len);
+    }
+    return result;
+  }
+
   let rule = world.rules.get(ridx);
   if (!rule) {
     throw "Not found";
   }
   if (rule.type === "char") {
-    if (s[0] === rule.char) return 1;
-    else return -1;
+    if (s[0] === rule.char) return [1];
+    else return [];
   } else {
+    let result: number[] = [];
     for (let alt of rule.alts) {
-      let valid = true;
-      let pos = 0;
-      for (let idx of alt) {
-        let r = matches(world, s.substring(pos), idx);
-        if (r === -1) {
-          valid = false;
-          break;
-        }
-        pos += r;
-      }
-      if (valid) return pos;
+      result = [...result, ...matchesList(s, alt)];
     }
-    return -1;
+    return result;
   }
 }
 
@@ -75,7 +77,7 @@ function solvea(world: World) {
     if (idx !== 2) continue;
     console.log(sample);
     let r = matches(world, sample, 0);
-    if (r === sample.length) {
+    if (r.length > 0) {
       console.log("YES", r, sample.length);
       valid++;
     } else {
