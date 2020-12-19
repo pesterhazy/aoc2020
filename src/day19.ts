@@ -78,9 +78,14 @@ function solvea(world: World) {
   console.log(valid);
 }
 
-export async function run() {
-  var text: string = await slurp("data/day19a.txt");
-  var world = parse(text);
+function patch(text: string): string {
+  return text
+    .replace(/^8:.*$/m, "8: 42 | 42 8")
+    .replace(/^11:.*$/m, "11: 42 31 | 42 11 31");
+}
 
-  solvea(world);
+export async function run() {
+  var text: string = await slurp("data/day19x.txt");
+  solvea(parse(text));
+  solvea(parse(patch(text)));
 }
