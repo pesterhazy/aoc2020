@@ -1,5 +1,5 @@
 import { slurp } from "./util";
-import { inspect } from "util";
+import { strict as assert } from "assert";
 
 interface CharRule {
   type: "char";
@@ -50,10 +50,61 @@ function patch(text: string): string {
     .replace(/^11:.*$/m, "11: 42 31 | 42 11 31");
 }
 
-function matches(ruleset: Ruleset, s: string): boolean {
+interface Job {
+  s: string;
+  rids: number[];
+}
+
+function matches(
+  ruleset: Ruleset,
+  initialRid: number,
+  initialS: string
+): boolean {
+  let jobs: Job[] = [{ s: initialS, rids: [initialRid] }];
+
+  while (jobs.length > 0) {
+    let job = jobs.shift()!;
+
+    if (job.rids.length === 0) {
+      if (job.s.length === 0) return true;
+    } else {
+      let rule = ruleset.get(job.rids[0]);
+      if (rule === undefined) throw "not found";
+      if (rule.type == "char") {
+        if (rule.char === job.s[0]) {
+          jobs.push({ s: job.s.substring(1), rids: job.rids.slice(1) });
+        }
+      } else {
+        // alt
+        for (let alt of rule.alts) {
+          jobs.push({ s: job.s, rids: [...alt, ...job.rids.slice(1)] });
+        }
+      }
+    }
+  }
   return false;
+}
+
+function solve(world: World) {
+  console.log(world.samples.filter(s => matches(world.rules, 0, s)).length);
 }
 
 export async function run() {
   var text: string = patch(await slurp("data/day19x.txt"));
+
+  let ruleset: Ruleset = new Map();
+
+  ruleset.set(0, { type: "char", char: "a" });
+  ruleset.set(1, { type: "char", char: "b" });
+  ruleset.set(2, { type: "alt", alts: [[0], [1]] });
+  ruleset.set(3, { type: "alt", alts: [[0, 1]] });
+  assert.equal(matches(ruleset, 0, "a"), true);
+  assert.equal(matches(ruleset, 1, "a"), false);
+  assert.equal(matches(ruleset, 2, "a"), true);
+  assert.equal(matches(ruleset, 2, "b"), true);
+  assert.equal(matches(ruleset, 2, "c"), false);
+  assert.equal(matches(ruleset, 3, "ab"), true);
+  assert.equal(matches(ruleset, 3, "ba"), false);
+
+  solve(parse(text));
 }
