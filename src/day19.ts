@@ -90,7 +90,7 @@ function solve(world: World) {
 }
 
 export async function run() {
-  var text: string = patch(await slurp("data/day19x.txt"));
+  var text: string = patch(await slurp("data/day19a.txt"));
 
   let ruleset: Ruleset = new Map();
 
