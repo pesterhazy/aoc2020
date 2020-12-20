@@ -84,9 +84,13 @@ function solve(world: World) {
 
     for (let [a, b] of v) cc2.set(a, (cc2.get(a) || 0) + 1);
   }
-  console.log("cc", cc);
-  console.log("cc2", cc2);
-  console.log("world", world.length); // 3x3
+  // console.log("cc", cc);
+  // console.log("cc2", cc2);
+  // console.log("world", world.length); // 3x3
+  let corners = new Set();
+  for (let [id, n] of cc2) if (n === 4) corners.add(id);
+
+  console.log(corners);
 }
 
 export async function run() {
