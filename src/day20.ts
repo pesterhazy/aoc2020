@@ -1,4 +1,5 @@
 import { slurp } from "./util";
+import { strict as assert } from "assert";
 
 function dump(o: any) {
   console.log(JSON.stringify(o, null, 4));
@@ -22,7 +23,7 @@ function parse(s: string): World {
 
     let m = ls[0].match(/\d+/);
     if (!m) throw ":(";
-    ls = ls.slice(1);
+    ls = ls.slice(1).filter(l => l.length !== 0);
 
     return [parseInt(m[0]), ls];
   });
@@ -31,11 +32,14 @@ function parse(s: string): World {
 // E, N, W, S
 
 function hash(grid: Grid): string[] {
+  assert.equal(width(grid), height(grid));
   let r: string[] = [];
   {
     let s = "";
     for (let y = 0; y < height(grid); y++) {
-      s += grid[y][width(grid) - 1];
+      let c = grid[y][width(grid) - 1];
+      if (c === undefined) throw new Error("boom");
+      s += c;
     }
     r.push(s);
   }
@@ -72,10 +76,21 @@ function solve(world: World) {
     }
   }
   console.log(m);
+  let cc: Map<number, number> = new Map();
+  let cc2: Map<number, number> = new Map();
+  for (let v of m.values()) {
+    cc.set(v.length, (cc.get(v.length) || 0) + 1);
+    if (v.length < 2) continue;
+
+    for (let [a, b] of v) cc2.set(a, (cc2.get(a) || 0) + 1);
+  }
+  console.log("cc", cc);
+  console.log("cc2", cc2);
+  console.log("world", world.length); // 3x3
 }
 
 export async function run() {
-  var text: string = await slurp("data/day20.txt");
+  var text: string = await slurp("data/day20a.txt");
 
   var grid = parse(text);
 
