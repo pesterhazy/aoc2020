@@ -64,8 +64,7 @@ function reverse(s: string) {
 
 function solve(world: World) {
   let m: Map<string, [number, number][]> = new Map();
-  for (let [n, grid] of world.entries()) {
-    let grid = world[n][1];
+  for (let [n, grid] of world) {
     let hashes = hash(grid);
     let sigs = [...hashes, ...hashes.map(reverse)];
     for (let [idx, sig] of sigs.entries()) {
@@ -92,6 +91,11 @@ function solve(world: World) {
   for (let [id, idxs] of cc2) if (idxs.size === 4) corners.set(id, idxs);
 
   console.log(corners);
+  let ans = 1;
+  for (let id of corners.keys()) {
+    ans *= id;
+  }
+  console.log("ans", ans);
 }
 
 export async function run() {
