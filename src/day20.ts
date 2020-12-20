@@ -66,29 +66,30 @@ function solve(world: World) {
   let m: Map<string, [number, number][]> = new Map();
   for (let [n, grid] of world.entries()) {
     let grid = world[n][1];
-    dump(grid);
     let hashes = hash(grid);
     let sigs = [...hashes, ...hashes.map(reverse)];
-    dump(sigs);
     for (let [idx, sig] of sigs.entries()) {
       let v = m.get(sig) || [];
       m.set(sig, [...v, [n, idx]]);
     }
   }
-  console.log(m);
   let cc: Map<number, number> = new Map();
-  let cc2: Map<number, number> = new Map();
+  let cc2: Map<number, Set<number>> = new Map();
   for (let v of m.values()) {
     cc.set(v.length, (cc.get(v.length) || 0) + 1);
     if (v.length < 2) continue;
 
-    for (let [a, b] of v) cc2.set(a, (cc2.get(a) || 0) + 1);
+    for (let [a, b] of v) {
+      let s = cc2.get(a) || new Set();
+      s.add(b);
+      cc2.set(a, s);
+    }
   }
   // console.log("cc", cc);
   // console.log("cc2", cc2);
   // console.log("world", world.length); // 3x3
-  let corners = new Set();
-  for (let [id, n] of cc2) if (n === 4) corners.add(id);
+  let corners = new Map();
+  for (let [id, idxs] of cc2) if (idxs.size === 4) corners.set(id, idxs);
 
   console.log(corners);
 }
