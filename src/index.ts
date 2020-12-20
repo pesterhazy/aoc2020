@@ -1,4 +1,4 @@
-import { run } from "./day19";
+import { run } from "./day20";
 
 async function main() {
   try {
