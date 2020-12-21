@@ -63,39 +63,58 @@ function reverse(s: string) {
 }
 
 function solve(world: World) {
-  let m: Map<string, [number, number][]> = new Map();
-  for (let [n, grid] of world) {
-    let hashes = hash(grid);
-    let sigs = [...hashes, ...hashes.map(reverse)];
-    for (let [idx, sig] of sigs.entries()) {
-      let v = m.get(sig) || [];
-      m.set(sig, [...v, [n, idx]]);
+  let h: Map<number, string[]> = new Map();
+  let cc: Map<string, Set<number>> = new Map();
+  let ccc: Map<number, Set<string>> = new Map();
+  for (let [id, grid] of world) {
+    let hh = hash(grid);
+    hh = [
+      ...hh,
+      hh[2],
+      reverse(hh[1]),
+      hh[0],
+      reverse(hh[3]),
+      reverse(hh[0]),
+      hh[3],
+      reverse(hh[2]),
+      hh[1]
+    ];
+    h.set(id, hh);
+
+    for (let s of hh) {
+      let tmp = cc.get(s) || new Set();
+      tmp.add(id);
+      cc.set(s, tmp);
     }
   }
-  let cc: Map<number, number> = new Map();
-  let cc2: Map<number, Set<number>> = new Map();
-  for (let v of m.values()) {
-    cc.set(v.length, (cc.get(v.length) || 0) + 1);
-    if (v.length < 2) continue;
-
-    for (let [a, b] of v) {
-      let s = cc2.get(a) || new Set();
-      s.add(b);
-      cc2.set(a, s);
+  let toRemove = [...cc.entries()]
+    .filter(([a, b]) => b.size === 1)
+    .map(pair => pair[0]);
+  for (let i of toRemove) cc.delete(i);
+  console.log(cc);
+  for (let [sig, v] of cc)
+    for (let vv of v) {
+      let tmp = ccc.get(vv) || new Set();
+      tmp.add(sig);
+      ccc.set(vv, tmp);
+    }
+  console.log(ccc);
+  let corners = [];
+  for (let [a, b] of ccc) {
+    if (b.size === 4) {
+      corners.push(a);
     }
   }
-  // console.log("cc", cc);
-  // console.log("cc2", cc2);
-  // console.log("world", world.length); // 3x3
-  let corners = new Map();
-  for (let [id, idxs] of cc2) if (idxs.size === 4) corners.set(id, idxs);
 
-  console.log(corners);
-  let ans = 1;
-  for (let id of corners.keys()) {
-    ans *= id;
+  {
+    let ans = 1;
+    for (let c of corners) {
+      ans *= c;
+    }
+    console.log(ans);
   }
-  console.log("ans", ans);
+
+  let corner = corners[0];
 }
 
 export async function run() {
