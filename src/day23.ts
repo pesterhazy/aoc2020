@@ -33,7 +33,7 @@ function next(xs: number[], curIdx: number): [number[], number] {
   assert.equal(t.length, 6, "t should have 6 items");
   let destIdx = findDec(t, mod1(xs[curIdx] - 1, N));
   let pickUp = pick(xs, curIdx + 1, 3);
-  console.log("pick up", pickUp);
+  // console.log("pick up", pickUp);
   let parts = [
     pick(t, 0, destIdx + 1),
     pickUp,
@@ -46,15 +46,22 @@ function next(xs: number[], curIdx: number): [number[], number] {
   return [newXs, mod(newCurIdx + 1, N)];
 }
 
+function answer(xs: number[]) {
+  let idx = xs.indexOf(1);
+  assert.notEqual(idx, -1);
+
+  return pick(xs, idx + 1, 8).join("");
+}
+
 function solve(xs: number[]) {
   let cur = 0;
-  for (let i = 0; i < 10; i++) {
-    console.log("*** move", i + 1);
-    console.log("*** ", xs, cur);
+  for (let i = 0; i < 100; i++) {
+    // console.log("*** move", i + 1);
+    // console.log("*** ", xs, cur);
     [xs, cur] = next(xs, cur);
-    console.log();
+    // console.log();
   }
-  console.log("=>", xs, cur);
+  console.log("=>", answer(xs));
 }
 
 export async function run() {
