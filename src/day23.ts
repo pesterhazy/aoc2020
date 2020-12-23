@@ -49,7 +49,7 @@ function fill(xs: number[], n: number) {
   let r = [];
 
   for (let i = 0; i < xs.length; i++) r.push(xs[i]);
-  for (let i = xs.length; i < n; i++) r.push(i);
+  for (let i = xs.length; i < n; i++) r.push(i + 1);
   return r;
 }
 
@@ -77,9 +77,8 @@ function solve(xs: number[], nMoves: number) {
 const explode = (text: string) => [...text].map(s => parseInt(s));
 
 export async function run() {
-  // let text = "389125467";
   console.log("*** part1");
   assert.equal(solve(fill(explode("389125467"), 9), 100), "67384529");
   console.log("*** part2");
-  assert.equal(solve(fill(explode("389125467"), 1000000), 1000), "xxx");
+  assert.equal(solve(fill(explode("389125467"), 1000000), 10000000), "xxx");
 }
