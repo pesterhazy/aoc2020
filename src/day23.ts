@@ -8,13 +8,12 @@ const N = 9;
 function slice(xs: number[], start: number, end: number): number[] {
   let r = [];
   for (
-    let i = mod(start, xs.length);
-    i !== mod(end, xs.length);
-    i = mod(i + 1, xs.length)
+    let i = start;
+    i !== end;
+    i = mod(i + 1, xs.length), end = mod(end, xs.length)
   ) {
     r.push(xs[i]);
   }
-  assert.equal(mod(end - start, xs.length), r.length, "slice length");
   return r;
 }
 
@@ -30,7 +29,6 @@ const findDec = (xs: number[], n: number) => {
 function next(xs: number[], curIdx: number): [number[], number] {
   assert.equal(9, xs.length);
   let tparts = [slice(xs, 0, curIdx + 1), slice(xs, curIdx + 4, 0)];
-  console.log("tparts", tparts);
   let t = Array.prototype.concat(...tparts);
   assert.equal(6, t.length);
   let destIdx = findDec(t, mod(xs[curIdx] - 1, N));
@@ -38,17 +36,10 @@ function next(xs: number[], curIdx: number): [number[], number] {
   console.log("destIdx", destIdx);
   console.log("dest", t[destIdx]);
   let wrk = slice(xs, curIdx + 1, curIdx + 4);
-  // console.log("parts", [
-  //   slice(t, 0, destIdx + 1),
-  //   wrk,
-  //   slice(t, destIdx + 1, destIdx + t.length - 1)
-  // ]);
-  let newXs = [
-    ...slice(t, 0, destIdx + 1),
-    ...wrk,
-    ...slice(t, destIdx + 1, destIdx + t.length - 1)
-  ];
-  assert.equal(9, newXs.length);
+  let parts = [slice(t, 0, destIdx + 1), wrk, slice(t, destIdx + 1, 0)];
+  console.log("parts", parts);
+  let newXs = Array.prototype.concat(...parts);
+  assert.equal(newXs.length, 9, "newXs must have the same length");
   let newCurIdx = newXs.indexOf(xs[curIdx]);
   assert(newCurIdx !== -1);
   return [newXs, mod(newCurIdx + 1, N)];
@@ -70,6 +61,7 @@ test("slice", function() {
   assert.deepEqual(slice(xs, 1, 2), [101]);
   assert.deepEqual(slice(xs, 1, 0), [101, 102]);
   assert.deepEqual(slice(xs, 1, 1), []);
+  assert.deepEqual(slice(xs, 1, 4), [101, 102, 100]);
 });
 
 export async function run() {
