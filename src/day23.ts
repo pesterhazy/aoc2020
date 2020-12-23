@@ -27,21 +27,16 @@ const findDec = (xs: number[], n: number) => {
 
 function next(xs: number[], curIdx: number): [number[], number] {
   assert.equal(9, xs.length);
-  console.log("curIdx", curIdx);
   let t = pick(xs, curIdx + 4, 6);
   assert.equal(t.length, 6, "t should have 6 items");
   let destIdx = findDec(t, mod(xs[curIdx] - 1, N));
-  console.log("t", t);
-  console.log("destIdx", destIdx);
-  console.log("dest", t[destIdx]);
-  let wrk = pick(xs, curIdx + 1, 3);
-  console.log("pick up", wrk);
+  let pickUp = pick(xs, curIdx + 1, 3);
+  console.log("pick up", pickUp);
   let parts = [
     pick(t, 0, destIdx + 1),
-    wrk,
+    pickUp,
     pick(t, destIdx + 1, 9 - (destIdx + 4))
   ];
-  console.log("parts", parts);
   let newXs = Array.prototype.concat(...parts);
   assert.equal(newXs.length, 9, "newXs must have the same length");
   let newCurIdx = newXs.indexOf(xs[curIdx]);
@@ -55,6 +50,7 @@ function solve(xs: number[]) {
     console.log("*** move", i + 1);
     console.log("*** ", xs, cur);
     [xs, cur] = next(xs, cur);
+    console.log();
   }
   console.log("=>", xs, cur);
 }
