@@ -74,7 +74,7 @@ function solve(world: State): State {
 }
 
 export async function run() {
-  var text: string = await slurp("data/day22.txt");
+  var text: string = await slurp("data/day22a.txt");
   var world = parse(text);
 
   let result = solve(world);
