@@ -21,10 +21,10 @@ function winner(stacks: State): number {
   throw "We should never get here";
 }
 
-function score(stack: number[]): number {
+function score(deck: Deck): number {
   let sum = 0;
-  for (let i = stack.length - 1, mult = 1; i >= 0; i--, mult++) {
-    sum += mult * stack[i];
+  for (let i = deck.length - 1, mult = 1; i >= 0; i--, mult++) {
+    sum += mult * deck[i];
   }
   return sum;
 }
@@ -74,9 +74,9 @@ function solve(world: State): State {
 }
 
 export async function run() {
-  var text: string = await slurp("data/day22a.txt");
+  var text: string = await slurp("data/day22.txt");
   var world = parse(text);
 
   let result = solve(world);
-  console.log(result);
+  console.log(score(result[winner(result)]));
 }
