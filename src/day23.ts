@@ -67,7 +67,8 @@ function solve(xs: number[]) {
 export async function run() {
   await test.run();
 
-  let text = "389125467";
+  // let text = "389125467";
+  let text = "739862541";
 
   var xs = [...text].map(s => parseInt(s));
 
