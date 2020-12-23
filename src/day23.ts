@@ -51,10 +51,9 @@ function answer(xs: number[]) {
 
 function solve(xs: number[]) {
   for (let i = 0; i < 100; i++) {
-    console.log(i, xs);
     xs = next(xs);
   }
-  console.log("=>", answer(xs));
+  return answer(xs);
 }
 
 export async function run() {
@@ -65,5 +64,5 @@ export async function run() {
 
   var xs = [...text].map(s => parseInt(s));
 
-  solve(xs);
+  assert.equal(solve(xs), "94238657");
 }
