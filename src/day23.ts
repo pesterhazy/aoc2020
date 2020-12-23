@@ -1,6 +1,7 @@
 import { slurp, mod } from "./util";
 import { strict as assert } from "assert";
 import baretest from "baretest";
+import * as crypto from "crypto";
 const test = baretest("aoc");
 
 const mod1 = (x: number, n: number) => mod(x - 1, n) + 1;
@@ -52,11 +53,18 @@ function fill(xs: number[], n: number) {
   return r;
 }
 
+function md5(s: string) {
+  return crypto
+    .createHash("md5")
+    .update(s)
+    .digest("hex");
+}
+
 function solve(xs: number[], nMoves: number) {
   let seen: Set<string> = new Set();
   for (let i = 0; i < nMoves; i++) {
     if (i % 100 === 0) console.log("...", i);
-    let key = JSON.stringify(xs);
+    let key = md5(JSON.stringify(xs));
     if (seen.has(key)) {
       throw "cycle detected i=" + i;
     }
