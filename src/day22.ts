@@ -35,7 +35,7 @@ function solve(world: State): State {
   function next(decks: State): State {
     let key = JSON.stringify(decks);
     if (seen.has(key)) {
-      // player 1 wins
+      // player 1 wins -> award all cards to them
       return [[...decks[0], ...decks[1]], []];
     } else {
       seen.add(key);
