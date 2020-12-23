@@ -1,4 +1,4 @@
-import { slurp, mod } from "./util";
+import { slurp, mod, time } from "./util";
 import { strict as assert } from "assert";
 import baretest from "baretest";
 const test = baretest("aoc");
@@ -77,6 +77,6 @@ export async function run() {
   var text: string = await slurp("data/day22a.txt");
   var world = parse(text);
 
-  let result = solve(world);
+  let result = time(() => solve(world));
   console.log(score(result[winner(result)]));
 }
