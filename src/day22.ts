@@ -27,10 +27,21 @@ function next(stacks: World): World {
   return newStacks;
 }
 
+function score(stack: number[]): number {
+  let sum = 0;
+  for (let i = stack.length - 1, mult = 1; i >= 0; i--, mult++) {
+    sum += mult * stack[i];
+  }
+  return sum;
+}
+
 function solve(world: World) {
-  console.log(world);
-  world = next(world);
-  console.log(world);
+  let round = 0;
+  while (world[0].length > 0 && world[1].length > 0) {
+    world = next(world);
+    round++;
+  }
+  console.log(round, world, score(world[0].length > 0 ? world[0] : world[1]));
 }
 
 export async function run() {
