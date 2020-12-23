@@ -44,6 +44,14 @@ function answer(xs: number[]) {
   return pick(xs, idx + 1, 8).join("");
 }
 
+function fill(xs: number[], n: number) {
+  let r = [];
+
+  for (let i = 0; i < xs.length; i++) r.push(xs[i]);
+  for (let i = xs.length; i < n; i++) r.push(i);
+  return r;
+}
+
 function solve(xs: number[]) {
   let seen: Set<string> = new Set();
   for (let i = 0; i < 100; i++) {
@@ -61,5 +69,5 @@ const explode = (text: string) => [...text].map(s => parseInt(s));
 
 export async function run() {
   // let text = "389125467";
-  assert.equal(solve(explode("389125467")), "67384529");
+  assert.equal(solve(fill(explode("389125467"), 9)), "67384529");
 }
