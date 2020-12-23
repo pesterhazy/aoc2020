@@ -6,7 +6,6 @@ const test = baretest("aoc");
 const N = 9;
 
 function slice(xs: number[], start: number, end: number): number[] {
-  console.log("slice", xs, start, end);
   let r = [];
   for (
     let i = mod(start, xs.length);
@@ -30,14 +29,9 @@ const findDec = (xs: number[], n: number) => {
 
 function next(xs: number[], curIdx: number): [number[], number] {
   assert.equal(9, xs.length);
-  console.log("tparts", [
-    slice(xs, 0, curIdx + 1),
-    slice(xs, curIdx + 4, curIdx + N)
-  ]);
-  let t = [
-    ...slice(xs, 0, curIdx + 1),
-    ...slice(xs, curIdx + 4, curIdx + N - 1)
-  ];
+  let tparts = [slice(xs, 0, curIdx + 1), slice(xs, curIdx + 4, 0)];
+  console.log("tparts", tparts);
+  let t = Array.prototype.concat(...tparts);
   assert.equal(6, t.length);
   let destIdx = findDec(t, mod(xs[curIdx] - 1, N));
   console.log("t", t);
@@ -75,7 +69,7 @@ test("slice", function() {
   assert.deepEqual(slice(xs, 0, 2), [100, 101]);
   assert.deepEqual(slice(xs, 1, 2), [101]);
   assert.deepEqual(slice(xs, 1, 0), [101, 102]);
-  assert.deepEqual(slice(xs, 1, 1), [101, 102, 100]);
+  assert.deepEqual(slice(xs, 1, 1), []);
 });
 
 export async function run() {
