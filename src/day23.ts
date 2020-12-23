@@ -52,9 +52,10 @@ function fill(xs: number[], n: number) {
   return r;
 }
 
-function solve(xs: number[]) {
+function solve(xs: number[], nMoves: number) {
   let seen: Set<string> = new Set();
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < nMoves; i++) {
+    if (i % 100 === 0) console.log("...", i);
     let key = JSON.stringify(xs);
     if (seen.has(key)) {
       throw "cycle detected i=" + i;
@@ -69,5 +70,8 @@ const explode = (text: string) => [...text].map(s => parseInt(s));
 
 export async function run() {
   // let text = "389125467";
-  assert.equal(solve(fill(explode("389125467"), 9)), "67384529");
+  console.log("*** part1");
+  assert.equal(solve(fill(explode("389125467"), 9), 100), "67384529");
+  console.log("*** part2");
+  assert.equal(solve(fill(explode("389125467"), 1000000), 1000), "xxx");
 }
