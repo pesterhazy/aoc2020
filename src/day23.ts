@@ -45,7 +45,13 @@ function answer(xs: number[]) {
 }
 
 function solve(xs: number[]) {
+  let seen: Set<string> = new Set();
   for (let i = 0; i < 100; i++) {
+    let key = JSON.stringify(xs);
+    if (seen.has(key)) {
+      throw "cycle detected i=" + i;
+    }
+    seen.add(key);
     xs = next(xs);
   }
   return answer(xs);
