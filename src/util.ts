@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import { performance } from "perf_hooks";
 
-async function slurp(fname: string): Promise<string> {
+export async function slurp(fname: string): Promise<string> {
   return fs.readFile(fname, "utf-8");
 }
 
@@ -14,4 +14,6 @@ export function time(fun: any) {
   return result;
 }
 
-export { slurp };
+export function mod(n: number, m: number) {
+  return ((n % m) + m) % m;
+}
