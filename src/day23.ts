@@ -5,21 +5,13 @@ const test = baretest("aoc");
 
 const N = 9;
 
-function slice(
-  xs: number[],
-  start: number,
-  end: number,
-  isInclusive: boolean
-): number[] {
+function pick(xs: number[], start: number, len: number): number[] {
   let r = [];
-  let flag = isInclusive;
-  for (
-    let i = mod(start, xs.length);
-    i !== mod(end, xs.length) || flag;
-    i = mod(i + 1, xs.length)
-  ) {
+  let i = mod(start, xs.length);
+  while (len > 0) {
     r.push(xs[i]);
-    flag = false;
+    i = mod(i + 1, xs.length);
+    len--;
   }
   return r;
 }
@@ -35,22 +27,19 @@ const findDec = (xs: number[], n: number) => {
 
 function next(xs: number[], curIdx: number): [number[], number] {
   assert.equal(9, xs.length);
-  let tparts = [
-    slice(xs, 0, curIdx + 1, true),
-    slice(xs, curIdx + 4, 0, false)
-  ];
-  let t = Array.prototype.concat(...tparts);
-  assert.equal(6, t.length);
+  console.log("curIdx", curIdx);
+  let t = pick(xs, curIdx + 4, 6);
+  assert.equal(t.length, 6, "t should have 6 items");
   let destIdx = findDec(t, mod(xs[curIdx] - 1, N));
   console.log("t", t);
   console.log("destIdx", destIdx);
   console.log("dest", t[destIdx]);
-  let wrk = slice(xs, curIdx + 1, curIdx + 4, false);
+  let wrk = pick(xs, curIdx + 1, 3);
   console.log("pick up", wrk);
   let parts = [
-    slice(t, 0, destIdx + 1, true),
+    pick(t, 0, destIdx + 1),
     wrk,
-    slice(t, destIdx + 1, 0, false)
+    pick(t, destIdx + 1, 9 - (destIdx + 4))
   ];
   console.log("parts", parts);
   let newXs = Array.prototype.concat(...parts);
@@ -69,18 +58,6 @@ function solve(xs: number[]) {
   }
   console.log("=>", xs, cur);
 }
-
-test("slice", function() {
-  let xs = [100, 101, 102];
-  assert.deepEqual(slice(xs, 0, 1, false), [100]);
-  assert.deepEqual(slice(xs, 0, 2, false), [100, 101]);
-  assert.deepEqual(slice(xs, 1, 2, false), [101]);
-  assert.deepEqual(slice(xs, 1, 0, false), [101, 102]);
-  assert.deepEqual(slice(xs, 1, 1, false), []);
-  assert.deepEqual(slice(xs, 1, 1, true), [101, 102, 100]);
-  assert.deepEqual(slice(xs, 1, 4, false), []);
-  assert.deepEqual(slice(xs, 1, 4, true), [101, 102, 100]);
-});
 
 export async function run() {
   await test.run();
