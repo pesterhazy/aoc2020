@@ -56,13 +56,11 @@ function solve(xs: number[]) {
   return answer(xs);
 }
 
+const explode = (text: string) => [...text].map(s => parseInt(s));
+
 export async function run() {
   await test.run();
 
   // let text = "389125467";
-  let text = "739862541";
-
-  var xs = [...text].map(s => parseInt(s));
-
-  assert.equal(solve(xs), "94238657");
+  assert.equal(solve(explode("389125467")), "67384529");
 }
