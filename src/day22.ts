@@ -3,9 +3,10 @@ import { strict as assert } from "assert";
 import baretest from "baretest";
 const test = baretest("aoc");
 
-type World = number[][];
+type Deck = number[];
+type State = Deck[];
 
-function parse(s: string): World {
+function parse(s: string): State {
   return s.split(/\n\n/).map(l =>
     l
       .split(/\n/)
@@ -14,17 +15,39 @@ function parse(s: string): World {
   );
 }
 
-function next(stacks: World): World {
-  let a = stacks[0][0];
-  let b = stacks[1][0];
-  let newStacks: World;
-  if (a > b) {
-    // first player wins
-    newStacks = [[...stacks[0].slice(1), a, b], stacks[1].slice(1)];
+function winner(stacks: State): number {
+  if (stacks[0].length === 0) return 1;
+  if (stacks[1].length === 0) return 0;
+  throw "We should never get here";
+}
+
+function next(decks: State): State {
+  if (false) {
+    // FIXME: first rule
   } else {
-    newStacks = [stacks[0].slice(1), [...stacks[1].slice(1), b, a]];
+    let newDecks: State;
+    let a = decks[0][0];
+    let b = decks[1][0];
+
+    if (decks[0].length > a && decks[1].length > b) {
+      // recursive game
+      let result = solve([decks[0].slice(1, 1 + a), decks[1].slice(1, 1 + b)]);
+      if (winner(result) === 0) {
+        // first player wins
+        newDecks = [[...decks[0].slice(1), a, b], decks[1].slice(1)];
+      } else {
+        newDecks = [decks[0].slice(1), [...decks[1].slice(1), b, a]];
+      }
+    } else {
+      if (a > b) {
+        // first player wins
+        newDecks = [[...decks[0].slice(1), a, b], decks[1].slice(1)];
+      } else {
+        newDecks = [decks[0].slice(1), [...decks[1].slice(1), b, a]];
+      }
+    }
+    return newDecks;
   }
-  return newStacks;
 }
 
 function score(stack: number[]): number {
@@ -35,13 +58,11 @@ function score(stack: number[]): number {
   return sum;
 }
 
-function solve(world: World) {
-  let round = 0;
+function solve(world: State): State {
   while (world[0].length > 0 && world[1].length > 0) {
     world = next(world);
-    round++;
   }
-  console.log(round, world, score(world[0].length > 0 ? world[0] : world[1]));
+  return world;
 }
 
 export async function run() {
