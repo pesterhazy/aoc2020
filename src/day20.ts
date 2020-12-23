@@ -91,14 +91,12 @@ function solve(world: World) {
     .filter(([a, b]) => b.size === 1)
     .map(pair => pair[0]);
   for (let i of toRemove) cc.delete(i);
-  console.log(cc);
   for (let [sig, v] of cc)
     for (let vv of v) {
       let tmp = ccc.get(vv) || new Set();
       tmp.add(sig);
       ccc.set(vv, tmp);
     }
-  console.log(ccc);
   let corners = [];
   for (let [a, b] of ccc) {
     if (b.size === 4) {
@@ -114,11 +112,24 @@ function solve(world: World) {
     console.log(ans);
   }
 
+  // direction: SE
   let corner = corners[0];
+  let hh = h.get(corner)!;
+  let found; // S,E
+  for (let i = 0; i < 4; i++) {
+    if (cc.has(hh[i]) && cc.has(hh[(i + 1) % 4])) {
+      found = [i, (i + 1) % 4];
+      break;
+    }
+  }
+  if (!found) throw "Not found";
+  let dir = 0; // E
+
+  console.log(hh[found[1]]);
 }
 
 export async function run() {
-  var text: string = await slurp("data/day20a.txt");
+  var text: string = await slurp("data/day20.txt");
 
   var grid = parse(text);
 
