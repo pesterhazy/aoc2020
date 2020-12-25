@@ -1,10 +1,5 @@
 import { slurp, mod } from "./util";
 import { strict as assert } from "assert";
-import baretest from "baretest";
-import * as crypto from "crypto";
-var Deque = require("double-ended-queue");
-
-const test = baretest("aoc");
 
 const mod1 = (x: number, n: number) => mod(x - 1, n) + 1;
 
@@ -14,6 +9,7 @@ function solve(
   nMoves: number,
   part1: boolean
 ): number {
+  // based on https://github.com/jonathanpaulson/AdventOfCode/blob/master/2020/23.py
   let xs: number[] = [];
 
   // fill array
