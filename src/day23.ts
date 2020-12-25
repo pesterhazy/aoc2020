@@ -70,5 +70,8 @@ export async function run() {
   console.log("*** part1");
   assert.equal(solve(explode("739862541"), 9, 100, true), 94238657);
   console.log("*** part2");
-  assert.equal(solve(explode("739862541"), 1000000, 10000000, false), -1);
+  assert.equal(
+    solve(explode("739862541"), 1000000, 10000000, false),
+    3072905352
+  );
 }
