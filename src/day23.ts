@@ -17,7 +17,7 @@ function pick(xs: number[], start: number, len: number): number[] {
   return r;
 }
 
-function next(xs: number[]): number[] {
+function next(xs: number[]) {
   const findDec = (ns: number[], n: number) => {
     let dest;
     while (true) {
@@ -35,7 +35,7 @@ function next(xs: number[]): number[] {
     ...pick(t, destIdx + 1, xs.length - (destIdx + 4))
   ];
   assert.equal(newXs.length, xs.length, "newXs must have the same length");
-  return newXs;
+  for (let i = 0; i < newXs.length; i++) xs[i] = newXs[i];
 }
 
 function answer(xs: number[]) {
@@ -53,23 +53,10 @@ function fill(xs: number[], n: number) {
   return r;
 }
 
-function md5(s: string) {
-  return crypto
-    .createHash("md5")
-    .update(s)
-    .digest("hex");
-}
-
 function solve(xs: number[], nMoves: number) {
-  let seen: Set<string> = new Set();
   for (let i = 0; i < nMoves; i++) {
     if (i % 100 === 0) console.log("...", i);
-    let key = md5(JSON.stringify(xs));
-    if (seen.has(key)) {
-      throw "cycle detected i=" + i;
-    }
-    seen.add(key);
-    xs = next(xs);
+    next(xs);
   }
   return answer(xs);
 }
@@ -79,6 +66,6 @@ const explode = (text: string) => [...text].map(s => parseInt(s));
 export async function run() {
   console.log("*** part1");
   assert.equal(solve(fill(explode("389125467"), 9), 100), "67384529");
-  console.log("*** part2");
-  assert.equal(solve(fill(explode("389125467"), 1000000), 10000000), "xxx");
+  // console.log("*** part2");
+  // assert.equal(solve(fill(explode("389125467"), 1000000), 10000000), "xxx");
 }
