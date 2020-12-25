@@ -69,7 +69,7 @@ function next(grid: Grid): Grid {
         if (peek(grid, vec2.add(vec2.create(), [x, y], delta))) neighbors++;
       }
       let v: boolean = peek(grid, [x, y]) || false;
-      if (v && (neighbors === 0 || neighbors >= 2)) v = false;
+      if (v && (neighbors === 0 || neighbors > 2)) v = false;
       else if (!v && neighbors === 2) v = true;
       poke(newGrid, [x, y], v);
     }
@@ -101,7 +101,7 @@ function parse(s: string): Dir[][] {
 }
 
 export async function run() {
-  var text: string = await slurp("data/day24.txt");
+  var text: string = await slurp("data/day24a.txt");
   let tiles = parse(text);
 
   solve(tiles);
