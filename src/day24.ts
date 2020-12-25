@@ -112,7 +112,12 @@ function solve(tiles: Dir[][]) {
     }
     poke(grid, [x, y], !peek(grid, [x, y]));
   }
+
   console.log(count(grid));
+  for (let i = 1; i <= 100; i++) {
+    grid = next(grid);
+    console.log("Day", i, ":", count(grid));
+  }
 }
 
 function parse(s: string): Dir[][] {
@@ -120,7 +125,7 @@ function parse(s: string): Dir[][] {
 }
 
 export async function run() {
-  var text: string = await slurp("data/day24a.txt");
+  var text: string = await slurp("data/day24.txt");
   let tiles = parse(text);
 
   solve(tiles);
