@@ -39,6 +39,13 @@ function solvea(infs: Inf[]) {
     }
   }
   console.log([...result.values()].reduce((a: number, b: number) => a + b));
+  let pairs = [...assoc.entries()];
+  pairs.sort((a, b) => {
+    if (a[0] < b[0]) return -1;
+    if (a[0] > b[0]) return 1;
+    return 0;
+  });
+  console.log(pairs.map(pair => pair[1]).join(","));
 }
 
 function parse(s: string): Inf {
