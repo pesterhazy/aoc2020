@@ -48,14 +48,14 @@ function bounds(grid: Grid): [vec2, vec2] {
   return r;
 }
 
-const DELTAS: [number, number][] = [
-  [-1, 0],
-  [0, -1],
-  [1, -1],
-  [1, 0],
-  [1, 1],
-  [0, 1]
-];
+const DELTAS: Record<Dir, [number, number]> = {
+  e: [1, 0],
+  se: [0, 1],
+  sw: [-1, 1],
+  w: [-1, 0],
+  nw: [0, -1],
+  ne: [1, -1]
+};
 
 function next(grid: Grid): Grid {
   let newGrid = new Map();
@@ -65,11 +65,11 @@ function next(grid: Grid): Grid {
     for (let y = b[1][0] - 1; y <= b[1][1] + 1; y++) {
       let neighbors = 0;
 
-      for (let delta of DELTAS) {
+      for (let delta of Object.values(DELTAS)) {
         if (peek(grid, vec2.add(vec2.create(), [x, y], delta))) neighbors++;
       }
       let v: boolean = peek(grid, [x, y]) || false;
-      if (v && (neighbors === 0 || neighbors > 2)) v = false;
+      if (v && (neighbors === 0 || neighbors >= 2)) v = false;
       else if (!v && neighbors === 2) v = true;
       poke(newGrid, [x, y], v);
     }
@@ -81,36 +81,12 @@ function solve(tiles: Dir[][]) {
   let grid = new Map();
 
   for (let tile of tiles) {
-    let x = 0,
-      y = 0;
+    let pos: vec2 = [0, 0];
 
     for (let move of tile) {
-      switch (move) {
-        case "e":
-          x++;
-          break;
-        case "se":
-          y++;
-          break;
-        case "sw":
-          x--;
-          y++;
-          break;
-        case "w":
-          x--;
-          break;
-        case "nw":
-          y--;
-          break;
-        case "ne":
-          x++;
-          y--;
-          break;
-        default:
-          throw "unknown";
-      }
+      pos = vec2.add(vec2.create(), pos, DELTAS[move]);
     }
-    poke(grid, [x, y], !peek(grid, [x, y]));
+    poke(grid, pos, !peek(grid, pos));
   }
 
   console.log(count(grid));
